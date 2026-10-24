@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroSoma — Technical Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0f18;
+      --card-bg: rgba(18, 26, 43, 0.75);
+      --card-border: rgba(56, 189, 248, 0.16);
+      --card-hover: rgba(56, 189, 248, 0.3);
+      --accent-cyan: #38bdf8;
+      --accent-teal: #2dd4bf;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 12% 12%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 88% 85%, rgba(168, 85, 247, 0.08) 0%, transparent 45%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 2rem;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .tag-badge {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.6rem;
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 880px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      margin-bottom: 2rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--card-hover);
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-title svg {
+      width: 22px;
+      height: 22px;
+      color: var(--accent-cyan);
+    }
+
+    /* Diagram Area */
+    .diagram-card {
+      background: #090e17;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 16px;
+      padding: 1.75rem;
+      overflow-x: auto;
+    }
+
+    .svg-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      min-width: 820px;
+    }
+
+    /* Stack Grid */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .stack-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 1.2rem;
+    }
+
+    .stack-header {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--accent-cyan);
+      margin-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .stack-desc {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stack-rationale {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 0.4rem;
+    }
+
+    /* Code Box */
+    pre.code-box {
+      background: #060910;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    /* Feature Tabs */
+    .feature-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .comp-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .comp-name {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .comp-role {
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      margin-bottom: 0.3rem;
+    }
+
+    .comp-ref {
+      font-size: 0.75rem;
+      color: var(--accent-amber);
+      font-family: var(--font-mono);
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .canonical-note {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-cyan);
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge-bar">
+        <span class="status-badge" id="specStatus" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border-color: rgba(16, 185, 129, 0.3);">Status: Approved</span>
+        <span class="tag-badge">Curriculum: 4-spec</span>
+        <span class="tag-badge">Stack: FastAPI + Three.js</span>
+      </div>
+      <h1>NeuroSoma: Technical Blueprint</h1>
+      <p class="tagline">The engineering blueprint: FastAPI Python backend, Three.js 3D WebGL viewport with 1:1 synchronized ViewCube, single-source-of-truth anatomical graph, and dual-mode audit engine.</p>
+    </header>
+
+    <!-- Architecture & Data Flow Diagram -->
+    <section class="card diagram-card">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        Full System Architecture &amp; Data Flow
+      </div>
+
+      <div class="svg-wrapper">
+        <svg width="880" height="230" viewBox="0 0 880 230">
+          <defs>
+            <linearGradient id="boxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#121a2b" />
+              <stop offset="100%" stop-color="#090e17" />
+            </linearGradient>
+            <marker id="specArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#38bdf8"/>
+            </marker>
+            <marker id="amberArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#f59e0b"/>
+            </marker>
+          </defs>
+
+          <!-- Zone 1: Browser Frontend -->
+          <rect x="20" y="20" width="360" height="190" rx="12" fill="none" stroke="rgba(56, 189, 248, 0.3)" stroke-dasharray="4,4"/>
+          <text x="35" y="42" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="700" font-size="12">Client: Browser Workspace (Vanilla JS)</text>
+
+          <!-- Frontend Box: Viewport & ViewCube -->
+          <g transform="translate(40, 60)">
+            <rect width="150" height="65" rx="8" fill="#131e33" stroke="#38bdf8" stroke-width="1.5"/>
+            <text x="75" y="28" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Three.js Viewport</text>
+            <text x="75" y="48" fill="#94a3b8" font-size="9.5" text-anchor="middle">+ Synced ViewCube</text>
+          </g>
+
+          <!-- Frontend Box: Notes & Terminal -->
+          <g transform="translate(210, 60)">
+            <rect width="150" height="65" rx="8" fill="#131e33" stroke="#38bdf8" stroke-width="1.5"/>
+            <text x="75" y="28" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Notes &amp; Terminal</text>
+            <text x="75" y="48" fill="#94a3b8" font-size="9.5" text-anchor="middle">Sticky Notes + Tree</text>
+          </g>
+
+          <g transform="translate(40, 140)">
+            <rect width="320" height="48" rx="6" fill="#0d1422" stroke="rgba(255,255,255,0.08)"/>
+            <text x="160" y="28" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">localStorage [Active Notes &amp; Theme]</text>
+          </g>
+
+          <!-- Bidirectional Communication Bus -->
+          <path d="M 380 90 L 460 90" stroke="#38bdf8" stroke-width="2" marker-end="url(#specArrow)"/>
+          <text x="420" y="80" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="9" text-anchor="middle">POST /audit</text>
+
+          <path d="M 460 115 L 380 115" stroke="#f59e0b" stroke-width="2" marker-end="url(#amberArrow)"/>
+          <text x="420" y="130" fill="#f59e0b" font-family="'JetBrains Mono', monospace" font-size="9" text-anchor="middle">Gap Packet</text>
+
+          <!-- Zone 2: Python Backend -->
+          <rect x="470" y="20" width="390" height="190" rx="12" fill="none" stroke="rgba(168, 85, 247, 0.3)" stroke-dasharray="4,4"/>
+          <text x="485" y="42" fill="#c084fc" font-family="'Outfit', sans-serif" font-weight="700" font-size="12">Server: Python Backend (FastAPI)</text>
+
+          <!-- Backend Box: API Controller -->
+          <g transform="translate(490, 60)">
+            <rect width="160" height="65" rx="8" fill="#1b1429" stroke="#a855f7" stroke-width="1.5"/>
+            <text x="80" y="28" fill="#f3e8ff" font-size="11" font-weight="600" text-anchor="middle">FastAPI Router (app.py)</text>
+            <text x="80" y="48" fill="#cbd5e1" font-size="9.5" text-anchor="middle">Static Server + Endpoints</text>
+          </g>
+
+          <!-- Backend Box: Dual-Mode Auditor -->
+          <g transform="translate(670, 60)">
+            <rect width="170" height="65" rx="8" fill="#1b1429" stroke="#a855f7" stroke-width="1.5"/>
+            <text x="85" y="28" fill="#f3e8ff" font-size="11" font-weight="600" text-anchor="middle">Auditor &amp; What-If</text>
+            <text x="85" y="48" fill="#fbbf24" font-size="9.5" text-anchor="middle">Dual-Mode Concept Engine</text>
+          </g>
+
+          <!-- Ground Truth Data Store -->
+          <g transform="translate(490, 140)">
+            <rect width="350" height="48" rx="6" fill="#0d1422" stroke="rgba(56, 189, 248, 0.4)"/>
+            <text x="175" y="28" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">data/anatomy_graph.json (Ground Truth Model)</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Stack Selection Grid -->
+    <section class="card">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+        </svg>
+        Technical Stack &amp; Architectural Rationale
+      </div>
+
+      <div class="stack-grid">
+        <div class="stack-box">
+          <div class="stack-header">
+            <span>FastAPI + Uvicorn</span>
+            <span style="font-size: 0.75rem; color: var(--accent-emerald);">Python 3.10+</span>
+          </div>
+          <div class="stack-desc">Asynchronous, modern web framework hosting REST endpoints and serving static files from a single process.</div>
+          <div class="stack-rationale">Directly honors learner's 4-year Python expertise while providing sub-millisecond response times.</div>
+        </div>
+
+        <div class="stack-box">
+          <div class="stack-header">
+            <span>Three.js (WebGL)</span>
+            <span style="font-size: 0.75rem; color: var(--accent-cyan);">r128 CDN</span>
+          </div>
+          <div class="stack-desc">Industry-standard 3D WebGL engine providing true 3D camera controls, raycasting, and transparency dimming.</div>
+          <div class="stack-rationale">Guarantees exact 1:1 rotation synchronization between the ViewCube and the anatomical camera.</div>
+        </div>
+
+        <div class="stack-box">
+          <div class="stack-header">
+            <span>Vanilla HTML5/CSS/JS</span>
+            <span style="font-size: 0.75rem; color: var(--accent-amber);">ES6 Modules</span>
+          </div>
+          <div class="stack-desc">Clean, lightweight frontend code without heavy frameworks or node_modules build friction.</div>
+          <div class="stack-rationale">Ultra-fast load time, 100% reliable local demo execution, and frictionless project setup.</div>
+        </div>
+
+        <div class="stack-box">
+          <div class="stack-header">
+            <span>Dual-Mode Concept Engine</span>
+            <span style="font-size: 0.75rem; color: var(--accent-purple);">Local + LLM</span>
+          </div>
+          <div class="stack-desc">Ground-truth concept graph matcher with an optional hook for live LLM API keys (Gemini / OpenAI).</div>
+          <div class="stack-rationale">Works 100% offline with zero API key requirement, while supporting live AI exploration.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Component Breakdown & File Tree -->
+    <section class="card">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+        </svg>
+        Planned Component Architecture &amp; File Tree
+      </div>
+
+      <div class="feature-tabs">
+        <button class="tab-btn active" onclick="switchTab('files')">File Tree &amp; Execution</button>
+        <button class="tab-btn" onclick="switchTab('components')">Component Mapping</button>
+        <button class="tab-btn" onclick="switchTab('data')">Data Schemas</button>
+      </div>
+
+      <!-- Tab: File Tree -->
+      <div id="tab-files" class="tab-panel active">
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          To run the application locally:
+        </p>
+        <pre class="code-box" style="margin-bottom: 1.25rem;">
+pip install -r requirements.txt
+python app.py
+# Server runs on http://localhost:8000</pre>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          Project file layout:
+        </p>
+        <pre class="code-box">
+AI-Basics/
+├── app.py                     # FastAPI application & REST route definitions
+├── engine/
+│   ├── __init__.py
+│   ├── auditor.py             # Note concept matcher & gap detection logic
+│   └── what_if.py             # Functional clinical scenario engine
+├── data/
+│   └── anatomy_graph.json     # Cranial/cervical nervous & musculoskeletal data
+├── static/
+│   ├── index.html             # 3-column workspace markup & View menu
+│   ├── css/
+│   │   └── style.css          # Surgical Dark, Light, & Pink themes + layout
+│   └── js/
+│       ├── app.js             # Main coordinator & theme switcher
+│       ├── viewport.js        # Three.js 3D canvas & synchronized ViewCube
+│       ├── notes.js           # Floating sticky notes & hierarchical tree
+│       └── terminal.js        # Modern command console & audit dialogues
+├── devpost/                   # Hackathon learning artifacts (scope, prd, spec)
+├── requirements.txt           # Python dependencies (fastapi, uvicorn, pydantic)
+└── README.md</pre>
+      </div>
+
+      <!-- Tab: Components -->
+      <div id="tab-components" class="tab-panel">
+        <div class="comp-item">
+          <div class="comp-name">app.py</div>
+          <div class="comp-role">FastAPI application hosting static file mounts, REST endpoints (`/api/anatomy`, `/api/audit`, `/api/what-if`), and server configuration.</div>
+          <div class="comp-ref">Implements: prd.md &gt; Screens and Layout</div>
+        </div>
+
+        <div class="comp-item">
+          <div class="comp-name">data/anatomy_graph.json</div>
+          <div class="comp-role">Single source of truth containing anatomical structures, innervation, clinical associations, and 3D geometric coordinates.</div>
+          <div class="comp-ref">Implements: prd.md &gt; 1. Viewport &amp; Anatomical Navigation</div>
+        </div>
+
+        <div class="comp-item">
+          <div class="comp-name">engine/auditor.py &amp; engine/what_if.py</div>
+          <div class="comp-role">Dual-mode semantic concept matcher that evaluates student notes, pinpoints unaddressed structures, and produces clinical what-if challenges.</div>
+          <div class="comp-ref">Implements: prd.md &gt; 3. Proactive Knowledge Gap Audit &amp; 4. What-If Challenge</div>
+        </div>
+
+        <div class="comp-item">
+          <div class="comp-name">static/js/viewport.js</div>
+          <div class="comp-role">Three.js 3D scene builder, raycaster for part clicks, material transparency dimming, and 1:1 synchronized Autodesk ViewCube controller.</div>
+          <div class="comp-ref">Implements: prd.md &gt; 1. Viewport, ViewCube &amp; Transparency Isolation</div>
+        </div>
+
+        <div class="comp-item">
+          <div class="comp-name">static/js/notes.js &amp; static/js/terminal.js</div>
+          <div class="comp-role">Floating sticky note manager with subtle styling, left hierarchical tree controller, and modern terminal prompt with audit dialogue.</div>
+          <div class="comp-ref">Implements: prd.md &gt; 2. Sticky Notes &amp; 5. Modern Terminal</div>
+        </div>
+      </div>
+
+      <!-- Tab: Data Schemas -->
+      <div id="tab-data" class="tab-panel">
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+          Sample node from <code>data/anatomy_graph.json</code>:
+        </p>
+        <pre class="code-box" style="margin-bottom: 1rem;">
+{
+  "id": "vagus_nerve",
+  "name": "Cranial Nerve X (Vagus Nerve)",
+  "system": "nervous",
+  "category": "Cranial Nerve",
+  "tag": "[Nerve]",
+  "innervation": "Parasympathetic to thoracic and abdominal viscera; motor to larynx/pharynx",
+  "clinical_relevance": "Recurrent laryngeal branch damage causes vocal fold paralysis and hoarseness",
+  "key_concepts": ["parasympathetic", "larynx", "pharynx", "recurrent laryngeal", "heart rate"],
+  "coordinates": {
+    "camera_target": [0.4, 1.2, 1.8],
+    "points": [[0.0, 2.2, 0.0], [0.3, 1.4, 0.2], [0.4, 0.6, 0.3], [0.5, -0.4, 0.4]]
+  }
+}</pre>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+          Audit Response Payload (<code>POST /api/audit</code>):
+        </p>
+        <pre class="code-box">
+{
+  "status": "gap_detected",
+  "target_structure_id": "vagus_nerve",
+  "structure_name": "Cranial Nerve X (Vagus Nerve)",
+  "camera_target": [0.4, 1.2, 1.8],
+  "gap_explanation": "Your notes cover cervical spine alignment but omit parasympathetic cranial innervation to thoracic viscera via CN X.",
+  "audited_terms": ["vagus", "parasympathetic"],
+  "what_if_prompt": "What-if the recurrent laryngeal branch of the vagus nerve is compressed during surgery? What specific functional deficit occurs?"
+}</pre>
+      </div>
+    </section>
+
+    <footer>
+      <div>NeuroSoma — Devpost Learn: Build With AI Hackathon</div>
+      <div class="canonical-note">Canonical blueprint: devpost/spec.md</div>
+    </footer>
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      const targetPanel = document.getElementById('tab-' + tabId);
+      if (targetPanel) targetPanel.classList.add('active');
+    }
+  </script>
+</body>
+</html>

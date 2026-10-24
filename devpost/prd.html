@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroSoma — Product Requirements Document (PRD)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0f18;
+      --card-bg: rgba(18, 26, 43, 0.75);
+      --card-border: rgba(56, 189, 248, 0.16);
+      --card-hover: rgba(56, 189, 248, 0.3);
+      --accent-cyan: #38bdf8;
+      --accent-teal: #2dd4bf;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-coral: #fb7185;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 90% 85%, rgba(168, 85, 247, 0.08) 0%, transparent 45%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 2rem;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .tag-badge {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.6rem;
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 880px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      margin-bottom: 2rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--card-hover);
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-title svg {
+      width: 22px;
+      height: 22px;
+      color: var(--accent-cyan);
+    }
+
+    /* Workspace Wireframe Preview */
+    .workspace-preview {
+      background: #080c14;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .ws-topbar {
+      background: #0d1422;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+    }
+
+    /* Dropdown Menu Bar */
+    .app-menubar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .menu-item {
+      position: relative;
+      cursor: pointer;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      color: #cbd5e1;
+      font-weight: 500;
+      font-size: 0.8rem;
+      user-select: none;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent-cyan);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 210px;
+      background: #111a2e;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 6px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      padding: 0.4rem 0;
+      display: none;
+      z-index: 100;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+      animation: fadeIn 0.15s ease;
+    }
+
+    .dropdown-header {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .dropdown-option {
+      padding: 0.4rem 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: #e2e8f0;
+      cursor: pointer;
+    }
+
+    .dropdown-option:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+    }
+
+    .dropdown-option input[type="checkbox"] {
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    .theme-demo-buttons {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .theme-pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .theme-pill.active {
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+    }
+
+    .ws-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr 280px;
+      height: 380px;
+    }
+
+    @media (max-width: 900px) {
+      .ws-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+    }
+
+    /* Left Panel */
+    .ws-panel-left {
+      background: #090e17;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 1rem;
+      font-size: 0.82rem;
+      overflow-y: auto;
+    }
+
+    .tree-title {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .tree-item {
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      color: #cbd5e1;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .tree-item:hover, .tree-item.active {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent-cyan);
+    }
+
+    .tag-clinical {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+    }
+
+    .has-note-badge {
+      margin-left: auto;
+      font-size: 0.68rem;
+      padding: 0.1rem 0.35rem;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--accent-emerald);
+      border-radius: 4px;
+    }
+
+    /* Viewport Panel */
+    .ws-panel-center {
+      background: radial-gradient(circle at center, #111a2e 0%, #080c14 100%);
+      position: relative;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      user-select: none;
+      cursor: default;
+    }
+
+    /* Viewport 3D Canvas Wrapper */
+    .model-viewport-stage {
+      perspective: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .model-viewport-content {
+      transform-style: preserve-3d;
+      transform: rotateX(-9deg) rotateY(-22deg);
+      transition: transform 0.08s linear;
+    }
+
+    .model-viewport-content.snapping {
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* Autodesk Inventor ViewCube Widget (Draggable & Clickable) */
+    .viewcube-widget {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 72px;
+      height: 72px;
+      perspective: 300px;
+      z-index: 10;
+      cursor: grab;
+    }
+
+    .viewcube-widget:active {
+      cursor: grabbing;
+    }
+
+    .cube-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateX(-22deg) rotateY(-32deg);
+      transition: transform 0.08s linear;
+    }
+
+    .cube-container.snapping {
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .cube-face {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      left: 11px;
+      top: 11px;
+      background: rgba(22, 33, 56, 0.88);
+      border: 1.5px solid rgba(56, 189, 248, 0.5);
+      color: #cbd5e1;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .cube-face:hover {
+      background: var(--accent-cyan);
+      color: #090d16;
+      border-color: #fff;
+    }
+
+    .cube-front  { transform: rotateY(0deg) translateZ(25px); }
+    .cube-back   { transform: rotateY(180deg) translateZ(25px); }
+    .cube-right  { transform: rotateY(90deg) translateZ(25px); }
+    .cube-left   { transform: rotateY(-90deg) translateZ(25px); }
+    .cube-top    { transform: rotateX(90deg) translateZ(25px); }
+    .cube-bottom { transform: rotateX(-90deg) translateZ(25px); }
+
+    /* Refined, Subtle Sticky Note Callout (No Obnoxious Outlines) */
+    .sticky-note-demo {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 220px;
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-radius: 8px;
+      padding: 0.8rem;
+      font-size: 0.78rem;
+      animation: floatIn 0.3s ease;
+      z-index: 5;
+      backdrop-filter: blur(8px);
+    }
+
+    .sticky-header {
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 0.35rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.25rem;
+    }
+
+    .sticky-body {
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+
+    .highlight-audited {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fde68a;
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+
+    /* Terminal Panel */
+    .ws-panel-right {
+      background: #080c14;
+      border-left: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .term-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .term-log {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      color: #94a3b8;
+    }
+
+    .term-user {
+      color: var(--accent-cyan);
+    }
+
+    .term-agent {
+      color: #e2e8f0;
+    }
+
+    .term-prompt-box {
+      margin-top: 0.5rem;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 6px;
+      padding: 0.6rem;
+      font-size: 0.74rem;
+      color: #fbbf24;
+    }
+
+    .prompt-actions {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+
+    .prompt-btn {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-accept {
+      background: var(--accent-amber);
+      color: #090d16;
+    }
+
+    .btn-decline {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+    }
+
+    /* Core Journey */
+    .journey-diagram {
+      width: 100%;
+      overflow-x: auto;
+      padding: 1rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Feature Tabs */
+    .feature-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .criteria-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .criteria-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    .criteria-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      font-size: 11px;
+      color: var(--accent-cyan);
+    }
+
+    .decision-row {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 1rem;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+    }
+
+    .decision-title {
+      font-weight: 600;
+      color: var(--accent-cyan);
+    }
+
+    .decision-rationale {
+      color: var(--text-muted);
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .canonical-note {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-cyan);
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge-bar">
+        <span class="status-badge" id="prdStatus" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border-color: rgba(16, 185, 129, 0.3);">Status: Approved</span>
+        <span class="tag-badge">Curriculum: 3-prd</span>
+        <span class="tag-badge">Source: devpost/scope.md</span>
+      </div>
+      <h1>NeuroSoma: Product Requirements</h1>
+      <p class="tagline">The concrete product definition: 3-panel compact workspace, 1:1 synchronized draggable ViewCube and viewport, classic View dropdown menu, contextual transparency isolation, and subtle note annotations without emojis.</p>
+    </header>
+
+    <!-- Interactive Workspace Preview -->
+    <section class="card">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+        Compact 3-Zone Workspace Layout with Synchronized ViewCube &amp; Subtle Notes
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        Interactive prototype layout demonstrating <strong>1:1 rotation synchronization between the ViewCube and the anatomical viewport</strong>, <strong>View dropdown menu</strong>, and <strong>subtle note cards</strong>:
+      </p>
+
+      <div class="workspace-preview" id="wsPreview">
+        <div class="ws-topbar">
+          <div class="app-menubar">
+            <span style="font-weight: 700; color: #fff; margin-right: 0.5rem;">NeuroSoma v0.1</span>
+            
+            <!-- View Dropdown Menu -->
+            <div class="menu-item" id="viewMenuBtn" onclick="toggleViewMenu(event)">
+              View ▾
+              <div class="dropdown-menu" id="viewDropdown">
+                <div class="dropdown-header">Layer Visibility</div>
+                <label class="dropdown-option" onclick="event.stopPropagation()">
+                  <input type="checkbox" id="chkNerve" checked onchange="toggleLayer('nerve', this.checked)">
+                  Nervous System
+                </label>
+                <label class="dropdown-option" onclick="event.stopPropagation()">
+                  <input type="checkbox" id="chkMusculo" checked onchange="toggleLayer('musculo', this.checked)">
+                  Musculoskeletal
+                </label>
+                <div class="dropdown-header" style="margin-top:0.3rem;">Presets</div>
+                <div class="dropdown-option" onclick="snapCube(0, 0)">Reset to Front</div>
+                <div class="dropdown-option" onclick="snapCube(-22, -32)">Isometric Standard</div>
+              </div>
+            </div>
+            
+            <div class="menu-item" onclick="alert('Audit triggered from menu')">Audit</div>
+          </div>
+
+          <div class="theme-demo-buttons">
+            <span style="font-size: 0.72rem; color: var(--text-muted); margin-right: 0.3rem;">Theme:</span>
+            <span class="theme-pill active" onclick="setTheme('dark', this)">Surgical Dark</span>
+            <span class="theme-pill" onclick="setTheme('light', this)">Clean Light</span>
+            <span class="theme-pill" onclick="setTheme('pink', this)">Off-Pink</span>
+          </div>
+        </div>
+
+        <div class="ws-layout">
+          <!-- Left: Tree -->
+          <div class="ws-panel-left">
+            <div class="tree-title">Structures &amp; Notes</div>
+            <div class="tree-item active">
+              <span class="tag-clinical">Nerve</span>
+              <span>Cranial N. X (Vagus)</span>
+              <span class="has-note-badge">1 note</span>
+            </div>
+            <div class="tree-item">
+              <span class="tag-clinical">Nerve</span>
+              <span>Cranial N. XI (Spinal Acc.)</span>
+            </div>
+            <div class="tree-item">
+              <span class="tag-clinical">Bone</span>
+              <span>Cervical Spine (C1-C7)</span>
+            </div>
+            <div class="tree-item">
+              <span class="tag-clinical">Muscle</span>
+              <span>Sternocleidomastoid</span>
+            </div>
+            <div class="tree-item">
+              <span class="tag-clinical">Muscle</span>
+              <span>Trapezius Superior</span>
+            </div>
+          </div>
+
+          <!-- Center: Viewport -->
+          <div class="ws-panel-center" id="wsCenter">
+            
+            <!-- Autodesk Inventor Style ViewCube (Fully Draggable & Synchronized) -->
+            <div class="viewcube-widget" id="cubeWidget" title="Click faces or drag to rotate model">
+              <div class="cube-container" id="demoCube">
+                <div class="cube-face cube-front" onclick="snapCube(0, 0, event)">FRONT</div>
+                <div class="cube-face cube-back" onclick="snapCube(0, 180, event)">BACK</div>
+                <div class="cube-face cube-right" onclick="snapCube(0, -90, event)">RIGHT</div>
+                <div class="cube-face cube-left" onclick="snapCube(0, 90, event)">LEFT</div>
+                <div class="cube-face cube-top" onclick="snapCube(-90, 0, event)">TOP</div>
+                <div class="cube-face cube-bottom" onclick="snapCube(90, 0, event)">BOTTOM</div>
+              </div>
+            </div>
+
+            <!-- Stylized anatomical SVG preview with 3D Rotation Synchronized to Cube -->
+            <div class="model-viewport-stage">
+              <div class="model-viewport-content" id="modelContent">
+                <svg width="220" height="260" viewBox="0 0 200 240" id="anatomicalSvg">
+                  <defs>
+                    <linearGradient id="nerveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#38bdf8"/>
+                      <stop offset="100%" stop-color="#2dd4bf"/>
+                    </linearGradient>
+                    <linearGradient id="muscleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#fb7185"/>
+                      <stop offset="100%" stop-color="#f43f5e"/>
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Surrounding dim anatomy (25% opacity) -->
+                  <g id="layerMusculo" opacity="0.25">
+                    <rect x="85" y="60" width="30" height="20" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5"/>
+                    <rect x="85" y="85" width="30" height="20" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5"/>
+                    <rect x="85" y="110" width="30" height="20" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5"/>
+                    <rect x="85" y="135" width="30" height="20" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5"/>
+                    <path d="M 60,65 Q 45,130 55,180" stroke="url(#muscleGrad)" stroke-width="14" fill="none" stroke-linecap="round"/>
+                    <path d="M 140,65 Q 155,130 145,180" stroke="url(#muscleGrad)" stroke-width="14" fill="none" stroke-linecap="round"/>
+                  </g>
+
+                  <g id="layerNerveOther" opacity="0.25">
+                    <path d="M 100,50 Q 120,110 125,190" stroke="url(#nerveGrad)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                  </g>
+
+                  <!-- Selected / Audited Vagus Nerve Path (100% Full Opacity) -->
+                  <g id="layerSelectedNerve" opacity="1.0">
+                    <path d="M 100,50 Q 80,110 75,190" stroke="url(#nerveGrad)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Subtle Sticky Note Callout (Understated border & shadow) -->
+            <div class="sticky-note-demo">
+              <div class="sticky-header">
+                <span>Vagus Nerve (CN X)</span>
+                <span style="color: #64748b; cursor: pointer;">✕</span>
+              </div>
+              <div class="sticky-body">
+                Parasympathetic innervation to thoracic viscera. <span class="highlight-audited">[Audited: Recurrent Laryngeal path]</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Terminal -->
+          <div class="ws-panel-right">
+            <div class="term-title">
+              <span style="color: var(--accent-emerald);">[System Online]</span>
+              <span>Study Terminal</span>
+            </div>
+            <div class="term-log">
+              <div class="term-agent">NeuroSoma initialized. Segment: Cranial/Cervical.</div>
+              <div class="term-user">&gt; inspect vagus</div>
+              <div class="term-agent">Focused on CN X. Surrounding anatomy dimmed.</div>
+              <div class="term-user">&gt; updated study notes</div>
+              <div class="term-prompt-box">
+                <div>[Audit Notification] Ready to audit your notes?</div>
+                <div class="prompt-actions">
+                  <button class="prompt-btn btn-accept">Accept Audit</button>
+                  <button class="prompt-btn btn-decline">Decline</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The End-to-End Core Journey -->
+    <section class="card">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        The 7-Step Verified Journey
+      </div>
+      <div class="journey-diagram">
+        <svg width="980" height="130" viewBox="0 0 980 130">
+          <defs>
+            <marker id="arrowHead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#38bdf8"/>
+            </marker>
+          </defs>
+          <!-- 1: Launch -->
+          <g transform="translate(10, 20)">
+            <rect width="115" height="75" rx="8" fill="#131e33" stroke="#38bdf8" stroke-width="1.5"/>
+            <text x="57" y="32" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">1. Launch</text>
+            <text x="57" y="52" fill="#94a3b8" font-size="9.5" text-anchor="middle">3-panel init +</text>
+            <text x="57" y="65" fill="#94a3b8" font-size="9.5" text-anchor="middle">1 sample note</text>
+          </g>
+          <line x1="125" y1="57" x2="145" y2="57" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowHead)"/>
+
+          <!-- 2: ViewMenu & ViewCube -->
+          <g transform="translate(150, 20)">
+            <rect width="115" height="75" rx="8" fill="#131e33" stroke="#38bdf8" stroke-width="1.5"/>
+            <text x="57" y="32" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">2. View Controls</text>
+            <text x="57" y="52" fill="#94a3b8" font-size="9.5" text-anchor="middle">View menu dropdown</text>
+            <text x="57" y="65" fill="#94a3b8" font-size="9.5" text-anchor="middle">+ synced ViewCube</text>
+          </g>
+          <line x1="265" y1="57" x2="285" y2="57" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowHead)"/>
+
+          <!-- 3: Annotate & Dimming -->
+          <g transform="translate(290, 20)">
+            <rect width="115" height="75" rx="8" fill="#131e33" stroke="#38bdf8" stroke-width="1.5"/>
+            <text x="57" y="32" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">3. Subtle Notes</text>
+            <text x="57" y="52" fill="#94a3b8" font-size="9.5" text-anchor="middle">Surroundings dim,</text>
+            <text x="57" y="65" fill="#94a3b8" font-size="9.5" text-anchor="middle">clean card</text>
+          </g>
+          <line x1="405" y1="57" x2="425" y2="57" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowHead)"/>
+
+          <!-- 4: Proactive Prompt -->
+          <g transform="translate(430, 20)">
+            <rect width="115" height="75" rx="8" fill="#1f1a14" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="57" y="32" fill="#f59e0b" font-size="11" font-weight="700" text-anchor="middle">4. Audit Prompt</text>
+            <text x="57" y="52" fill="#d6d3d1" font-size="9.5" text-anchor="middle">Ready to audit?</text>
+            <text x="57" y="65" fill="#d6d3d1" font-size="9.5" text-anchor="middle">Accept / Decline</text>
+          </g>
+          <line x1="545" y1="57" x2="565" y2="57" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowHead)"/>
+
+          <!-- 5: Auto Glide & Transparency Isolation -->
+          <g transform="translate(570, 20)">
+            <rect width="115" height="75" rx="8" fill="#1f1a14" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="57" y="32" fill="#f59e0b" font-size="11" font-weight="700" text-anchor="middle">5. Glide &amp; Isolate</text>
+            <text x="57" y="52" fill="#d6d3d1" font-size="9.5" text-anchor="middle">Zooms to gap +</text>
+            <text x="57" y="65" fill="#d6d3d1" font-size="9.5" text-anchor="middle">surroundings dim</text>
+          </g>
+          <line x1="685" y1="57" x2="705" y2="57" stroke="#a855f7" stroke-width="2" marker-end="url(#arrowHead)"/>
+
+          <!-- 6: What-If Challenge -->
+          <g transform="translate(710, 20)">
+            <rect width="115" height="75" rx="8" fill="#1c1427" stroke="#a855f7" stroke-width="1.5"/>
+            <text x="57" y="32" fill="#a855f7" font-size="11" font-weight="700" text-anchor="middle">6. What-If</text>
+            <text x="57" y="52" fill="#e9d5ff" font-size="9.5" text-anchor="middle">Clinical challenge</text>
+            <text x="57" y="65" fill="#e9d5ff" font-size="9.5" text-anchor="middle">in modal overlay</text>
+          </g>
+          <line x1="825" y1="57" x2="845" y2="57" stroke="#10b981" stroke-width="2" marker-end="url(#arrowHead)"/>
+
+          <!-- 7: Append & Solidify -->
+          <g transform="translate(850, 20)">
+            <rect width="115" height="75" rx="8" fill="#0f231c" stroke="#10b981" stroke-width="1.5"/>
+            <text x="57" y="32" fill="#10b981" font-size="11" font-weight="700" text-anchor="middle">7. Appended</text>
+            <text x="57" y="52" fill="#a7f3d0" font-size="9.5" text-anchor="middle">Verified takeaway</text>
+            <text x="57" y="65" fill="#a7f3d0" font-size="9.5" text-anchor="middle">saved into note</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Detailed Functional Requirements & Checkable Criteria -->
+    <section class="card">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        Detailed Feature Requirements &amp; Acceptance Criteria
+      </div>
+
+      <div class="feature-tabs">
+        <button class="tab-btn active" onclick="switchFeature('viewport')">1. Synced ViewCube &amp; View Menu</button>
+        <button class="tab-btn" onclick="switchFeature('sticky')">2. Subtle Sticky Notes</button>
+        <button class="tab-btn" onclick="switchFeature('audit')">3. Proactive Audit</button>
+        <button class="tab-btn" onclick="switchFeature('whatif')">4. What-If Challenge</button>
+        <button class="tab-btn" onclick="switchFeature('states')">5. States &amp; Boundaries</button>
+        <button class="tab-btn" onclick="switchFeature('decisions')">6. Product Decisions</button>
+      </div>
+
+      <!-- Tab: Viewport -->
+      <div id="feat-viewport" class="tab-panel active">
+        <p style="font-size: 0.92rem; color: #cbd5e1; margin-bottom: 0.5rem;">
+          <strong>Interactive Viewport with 1:1 Synchronized ViewCube:</strong> Both the 3D cube and anatomical viewport rotate in real time together.
+        </p>
+        <ul class="criteria-list">
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>1:1 Rotation Synchronization:</strong> Dragging the ViewCube directly rotates the anatomical model inside the viewport; dragging the canvas rotates the ViewCube in unison.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Functional Orthogonal Snapping:</strong> Clicking any face (Front, Back, Right, Left, Top, Bottom) snaps both the cube and anatomical model to that exact vantage point.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Uncluttered UI:</strong> Zero helper text or redundant captions beneath the cube or viewport controls.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Application View Menu Bar:</strong> Layer selection is configured through a classic top menu (`View > Layers > [x] Nervous, [x] Musculoskeletal`) with checkmarks.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Transparency Dimming Isolation:</strong> Selecting an anatomical structure or auditing a gap dims all surrounding structures to 25% opacity while the target structure remains at 100% full brightness.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab: Sticky Notes -->
+      <div id="feat-sticky" class="tab-panel">
+        <p style="font-size: 0.92rem; color: #cbd5e1; margin-bottom: 0.5rem;">
+          <strong>Subtle Sticky Notes:</strong> Anchored callouts with soft, understated borders avoiding harsh or obnoxious outlines.
+        </p>
+        <ul class="criteria-list">
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Refined Visual Styling:</strong> Dark glassmorphism cards with subtle 1px border (`rgba(255,255,255,0.09)`) and soft elevation shadows.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Structure Selection:</strong> Clicking a nerve or muscle opens an anchored sticky-note overlay with its clinical tag, name, and note text.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Dynamic Tree Addition:</strong> Entering notes adds the structure into the left-hand navigation tree.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Blank Note Discard:</strong> Empty notes are discarded upon closing and never saved as blank drafts, keeping the tree uncluttered.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab: Proactive Audit -->
+      <div id="feat-audit" class="tab-panel">
+        <p style="font-size: 0.92rem; color: #cbd5e1; margin-bottom: 0.5rem;">
+          <strong>Proactive Note Auditor &amp; Camera Glide:</strong> Politeness meets automation—prompts when ready, then physically guides attention.
+        </p>
+        <ul class="criteria-list">
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Readiness Prompt:</strong> After notes are updated, the terminal offers: <em>"Ready to audit your notes? [Accept] [Decline]"</em>.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Camera Glide &amp; Dimming:</strong> On accept, the viewport camera glides to center on the omitted structure while dimming surrounding parts.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Temporary Highlighting:</strong> Terms and concepts under audit are temporarily highlighted in yellow inside the note.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab: What-If -->
+      <div id="feat-whatif" class="tab-panel">
+        <p style="font-size: 0.92rem; color: #cbd5e1; margin-bottom: 0.5rem;">
+          <strong>Clinical What-If Challenge:</strong> Turns gap correction into applied clinical logic.
+        </p>
+        <ul class="criteria-list">
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Modal Challenge:</strong> A clean overlay asks a physiological scenario (e.g. nerve lesion, entrapment, or biomechanical failure).</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Interactive Response:</strong> The user types their clinical answer and submits.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Auto-Appended Insight:</strong> The validated clinical insight is appended directly to the bottom of the structure's note.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab: States -->
+      <div id="feat-states" class="tab-panel">
+        <p style="font-size: 0.92rem; color: #cbd5e1; margin-bottom: 0.5rem;">
+          <strong>Consequential States &amp; Boundaries:</strong>
+        </p>
+        <ul class="criteria-list">
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>First Launch:</strong> Pre-loaded with exactly 1 sample note (e.g. Vagus Nerve) to demonstrate format without overwhelming empty slots.</div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>Empty Notes State:</strong> If audited with 0 notes, outputs: <em>"No notes found to audit. Inspect a structure and jot down some thoughts first."</em></div>
+          </li>
+          <li class="criteria-item">
+            <div class="criteria-box">✓</div>
+            <div><strong>100% Thorough State:</strong> When all concepts are covered, audits older notes using spaced what-if retrieval rather than inventing fake errors.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab: Decisions -->
+      <div id="feat-decisions" class="tab-panel">
+        <div class="decision-row">
+          <div class="decision-title">1:1 Rotation Synchronization</div>
+          <div class="decision-rationale">Rotating either the ViewCube or the anatomical canvas drives both simultaneously, ensuring complete spatial alignment without lag.</div>
+        </div>
+        <div class="decision-row">
+          <div class="decision-title">Subtle Note Aesthetics</div>
+          <div class="decision-rationale">Eliminates obnoxious high-contrast outlines in favor of soft, refined dark cards that integrate smoothly with the clinical UI.</div>
+        </div>
+        <div class="decision-row">
+          <div class="decision-title">View Dropdown Menu</div>
+          <div class="decision-rationale">Modeled after desktop IDEs/Sheets (`View > Layers`), providing a standardized menu interface rather than floating pill buttons.</div>
+        </div>
+        <div class="decision-row">
+          <div class="decision-title">Transparency Dimming</div>
+          <div class="decision-rationale">Surrounding structures drop to 25% opacity when a part is selected or audited, cleanly isolating the anatomy without drawing circles.</div>
+        </div>
+        <div class="decision-row">
+          <div class="decision-title">Strict No-Emoji Standard</div>
+          <div class="decision-rationale">Exclusively professional clinical typography and iconography across all text, terminal outputs, and buttons.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>NeuroSoma — Devpost Learn: Build With AI Hackathon</div>
+      <div class="canonical-note">Canonical specification: devpost/prd.md</div>
+    </footer>
+  </div>
+
+  <script>
+    // View Dropdown Menu Toggle
+    function toggleViewMenu(e) {
+      e.stopPropagation();
+      const menu = document.getElementById('viewDropdown');
+      menu.classList.toggle('show');
+    }
+
+    document.addEventListener('click', () => {
+      const menu = document.getElementById('viewDropdown');
+      if (menu) menu.classList.remove('show');
+    });
+
+    function toggleLayer(layer, isChecked) {
+      if (layer === 'musculo') {
+        const el = document.getElementById('layerMusculo');
+        if (el) el.style.display = isChecked ? 'block' : 'none';
+      } else if (layer === 'nerve') {
+        const n1 = document.getElementById('layerNerveOther');
+        const n2 = document.getElementById('layerSelectedNerve');
+        if (n1) n1.style.display = isChecked ? 'block' : 'none';
+        if (n2) n2.style.display = isChecked ? 'block' : 'none';
+      }
+    }
+
+    // Interactive 1:1 Synchronized Draggable ViewCube & Viewport Model
+    let rotX = -22;
+    let rotY = -32;
+    let isDragging = false;
+    let startX, startY;
+    const cubeEl = document.getElementById('demoCube');
+    const cubeWidget = document.getElementById('cubeWidget');
+    const modelContent = document.getElementById('modelContent');
+
+    function update3DRotation(isSnapping = false) {
+      if (isSnapping) {
+        cubeEl.classList.add('snapping');
+        modelContent.classList.add('snapping');
+      } else {
+        cubeEl.classList.remove('snapping');
+        modelContent.classList.remove('snapping');
+      }
+
+      // Cube transforms
+      cubeEl.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+
+      // Model in viewport transforms in 1:1 synchrony (calibrated perspective)
+      modelContent.style.transform = `rotateX(${rotX * 0.45}deg) rotateY(${rotY * 0.75}deg)`;
+    }
+
+    // Initial update
+    update3DRotation(false);
+
+    // Dragging ViewCube
+    cubeWidget.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      cubeEl.classList.remove('snapping');
+      modelContent.classList.remove('snapping');
+      e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      startX = e.clientX;
+      startY = e.clientY;
+
+      rotY += dx * 0.9;
+      rotX -= dy * 0.9;
+
+      // Bound rotX to avoid complete inversion gimbal lock
+      rotX = Math.max(-90, Math.min(90, rotX));
+      update3DRotation(false);
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    function snapCube(x, y, e) {
+      if (e) e.stopPropagation();
+      rotX = x;
+      rotY = y;
+      update3DRotation(true);
+    }
+
+    function setTheme(theme, btn) {
+      document.querySelectorAll('.theme-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const ws = document.getElementById('wsPreview');
+      const center = document.getElementById('wsCenter');
+      
+      if (theme === 'light') {
+        ws.style.background = '#f1f5f9';
+        ws.style.borderColor = '#94a3b8';
+        center.style.background = '#e2e8f0';
+      } else if (theme === 'pink') {
+        ws.style.background = '#2a1b24';
+        ws.style.borderColor = '#f472b6';
+        center.style.background = '#382330';
+      } else {
+        ws.style.background = '#080c14';
+        ws.style.borderColor = 'rgba(56, 189, 248, 0.25)';
+        center.style.background = 'radial-gradient(circle at center, #111a2e 0%, #080c14 100%)';
+      }
+    }
+
+    function switchFeature(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      const targetPanel = document.getElementById('feat-' + tabId);
+      if (targetPanel) targetPanel.classList.add('active');
+    }
+  </script>
+</body>
+</html>

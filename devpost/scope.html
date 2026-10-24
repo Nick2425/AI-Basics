@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroSoma — Scope Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: rgba(18, 26, 43, 0.7);
+      --card-border: rgba(56, 189, 248, 0.15);
+      --card-hover: rgba(56, 189, 248, 0.25);
+      --accent-cyan: #38bdf8;
+      --accent-teal: #2dd4bf;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 45%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 2rem;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .tag-badge {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+    }
+
+    .tagline {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 800px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--card-hover);
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-title svg {
+      width: 20px;
+      height: 20px;
+      color: var(--accent-cyan);
+    }
+
+    .kernel-highlight {
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(56, 189, 248, 0.05) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kernel-highlight::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--accent-purple), var(--accent-cyan));
+    }
+
+    /* Diagram Area */
+    .diagram-card {
+      margin-bottom: 2.5rem;
+      background: rgba(13, 20, 36, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 16px;
+      padding: 1.75rem;
+    }
+
+    .svg-diagram-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      padding: 1rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    svg.flow-diagram {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Interactive Stepper */
+    .stepper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .step-item:hover, .step-item.active {
+      background: rgba(56, 189, 248, 0.08);
+      border-color: rgba(56, 189, 248, 0.3);
+      transform: translateX(4px);
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .step-item.active .step-num {
+      background: var(--accent-cyan);
+      color: #090d16;
+    }
+
+    .step-content h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+
+    .step-content p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Tabs for Scope Boundary */
+    .boundary-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .boundary-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .boundary-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .boundary-list li strong {
+      color: var(--text-main);
+    }
+
+    .check-icon {
+      color: var(--accent-emerald);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .clock-icon {
+      color: var(--accent-amber);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .cut-icon {
+      color: #ef4444;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* 60s Demo Reel Card */
+    .demo-track {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .demo-step {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 1rem;
+      position: relative;
+    }
+
+    .demo-time {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-teal);
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    .demo-step h4 {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-main);
+    }
+
+    .demo-step p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .canonical-note {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-cyan);
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge-bar">
+        <span class="status-badge" id="planStatus" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border-color: rgba(16, 185, 129, 0.3);">Status: Approved</span>
+        <span class="tag-badge">Curriculum: 2-scope</span>
+        <span class="tag-badge">Target: 2–4 Hour PoC</span>
+      </div>
+      <h1>NeuroSoma: Anatomy & Knowledge-Gap Navigator</h1>
+      <p class="tagline">A persistent study companion for anatomy and biomedical coursework that pairs an interactive anatomical viewer with an active gap-detecting auditor and clinical "what-if" reinforcement.</p>
+    </header>
+
+    <!-- Visual Architecture & Loop Diagram -->
+    <section class="card diagram-card">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        The NeuroSoma Feedback Loop Architecture
+      </div>
+      <div class="svg-diagram-wrapper">
+        <svg class="flow-diagram" width="860" height="190" viewBox="0 0 860 190">
+          <defs>
+            <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0284c7" />
+              <stop offset="100%" stop-color="#38bdf8" />
+            </linearGradient>
+            <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7e22ce" />
+              <stop offset="100%" stop-color="#c084fc" />
+            </linearGradient>
+            <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#b45309" />
+              <stop offset="100%" stop-color="#fbbf24" />
+            </linearGradient>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#38bdf8" flood-opacity="0.25"/>
+            </filter>
+          </defs>
+
+          <!-- Node 1: Visual Model -->
+          <g transform="translate(20, 30)">
+            <rect width="140" height="90" rx="10" fill="#131e33" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="70" y="38" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="600" font-size="13" text-anchor="middle">1. Anatomical View</text>
+            <text x="70" y="58" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="10.5" text-anchor="middle">Nervous &amp; Musculo-</text>
+            <text x="70" y="73" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="10.5" text-anchor="middle">skeletal Segment</text>
+          </g>
+
+          <!-- Arrow 1 to 2 -->
+          <path d="M 160 75 L 188 75" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+          <polygon points="188,71 198,75 188,79" fill="#38bdf8" />
+
+          <!-- Node 2: Interactive Notes -->
+          <g transform="translate(198, 30)">
+            <rect width="140" height="90" rx="10" fill="#131e33" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="70" y="38" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="600" font-size="13" text-anchor="middle">2. Freeform Notes</text>
+            <text x="70" y="58" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="10.5" text-anchor="middle">Click/terminal inspect</text>
+            <text x="70" y="73" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="10.5" text-anchor="middle">+ personal study log</text>
+          </g>
+
+          <!-- Arrow 2 to 3 -->
+          <path d="M 338 75 L 366 75" stroke="#a855f7" stroke-width="2" />
+          <polygon points="366,71 376,75 366,79" fill="#a855f7" />
+
+          <!-- Node 3: Gap Audit Engine -->
+          <g transform="translate(376, 25)" filter="url(#glow)">
+            <rect width="150" height="100" rx="12" fill="url(#purpleGrad)" opacity="0.15" />
+            <rect width="150" height="100" rx="12" fill="none" stroke="#c084fc" stroke-width="2" />
+            <text x="75" y="40" fill="#f3e8ff" font-family="'Outfit', sans-serif" font-weight="700" font-size="13" text-anchor="middle">3. Audit Engine</text>
+            <text x="75" y="60" fill="#e9d5ff" font-family="'Inter', sans-serif" font-size="11" text-anchor="middle">Scans written notes</text>
+            <text x="75" y="76" fill="#e9d5ff" font-family="'Inter', sans-serif" font-size="11" text-anchor="middle">vs. ground-truth map</text>
+            <text x="75" y="94" fill="#fbbf24" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">⚡ Kernel Trigger</text>
+          </g>
+
+          <!-- Arrow 3 to 4 -->
+          <path d="M 526 75 L 554 75" stroke="#38bdf8" stroke-width="2" />
+          <polygon points="554,71 564,75 554,79" fill="#38bdf8" />
+
+          <!-- Node 4: Auto-Focus & Pinpoint -->
+          <g transform="translate(564, 30)">
+            <rect width="135" height="90" rx="10" fill="#131e33" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="67" y="38" fill="#38bdf8" font-family="'Outfit', sans-serif" font-weight="600" font-size="13" text-anchor="middle">4. Viewport Pan</text>
+            <text x="67" y="58" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="10.5" text-anchor="middle">Camera transitions to</text>
+            <text x="67" y="73" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="10.5" text-anchor="middle">omitted structure</text>
+          </g>
+
+          <!-- Arrow 4 to 5 -->
+          <path d="M 699 75 L 727 75" stroke="#fbbf24" stroke-width="2" />
+          <polygon points="727,71 737,75 727,79" fill="#fbbf24" />
+
+          <!-- Node 5: What-If Reinforcement -->
+          <g transform="translate(737, 30)">
+            <rect width="115" height="90" rx="10" fill="#1c1917" stroke="#fbbf24" stroke-width="1.5" />
+            <text x="57" y="38" fill="#fbbf24" font-family="'Outfit', sans-serif" font-weight="600" font-size="13" text-anchor="middle">5. "What-If?"</text>
+            <text x="57" y="58" fill="#d6d3d1" font-family="'Inter', sans-serif" font-size="10.5" text-anchor="middle">Clinical challenge</text>
+            <text x="57" y="73" fill="#d6d3d1" font-family="'Inter', sans-serif" font-size="10.5" text-anchor="middle">cements mastery</text>
+          </g>
+
+          <!-- Return Loop Arrow -->
+          <path d="M 795 125 C 795 165, 90 165, 90 125" fill="none" stroke="rgba(56, 189, 248, 0.4)" stroke-dasharray="5,5" stroke-width="1.5" />
+          <polygon points="90,121 86,131 94,131" fill="#38bdf8" />
+          <text x="430" y="162" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">Updated notes &amp; spatial mastery cycle</text>
+        </svg>
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <!-- Unique Kernel -->
+      <section class="card kernel-highlight">
+        <div class="card-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          The Unique Kernel
+        </div>
+        <p style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #e2e8f0;">
+          <strong>Dynamic Diagnostic Navigation + "What-If" Reinforcement:</strong>
+        </p>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          Traditional anatomy apps either show a 3D model or present static flashcards. NeuroSoma reads your own study notes, cross-references them with structural ground truth, and physically maneuvers the camera directly to your blind spots.
+        </p>
+        <p style="font-size: 0.9rem; color: #cbd5e1;">
+          Once the gap is corrected, it poses a <strong>functional "what-if" clinical scenario</strong> (e.g. nerve compression or tendon rupture) to cement why the structure actually matters.
+        </p>
+      </section>
+
+      <!-- Target User & Stake -->
+      <section class="card">
+        <div class="card-title">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          Who It's For &amp; Why It Matters
+        </div>
+        <p style="font-size: 0.92rem; color: #e2e8f0; margin-bottom: 0.75rem;">
+          <strong>The Biomedical / Pre-Med Student:</strong>
+        </p>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          Sitting down for long study blocks with lecture slides open in one window and a persistent tab in another. Needs to actively test whether their mental map is complete before an exam.
+        </p>
+        <p style="font-size: 0.88rem; color: var(--text-muted);">
+          <strong>The Stake:</strong> Anatomy is too vast to rely on passive slide re-reading. Having a proactive AI assistant that catches omitted connections in your notes builds clinical intuition faster.
+        </p>
+      </section>
+    </div>
+
+    <!-- The Core Loop Interactive Stepper -->
+    <section class="card" style="margin-bottom: 2rem;">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        The 5-Step Core Loop
+      </div>
+      <div class="stepper" id="loopStepper">
+        <div class="step-item active" onclick="activateStep(this, 1)">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Explore &amp; Toggle</h4>
+            <p>Load the segmented view (nervous &amp; musculoskeletal); toggle layers to observe how nerve pathways weave through muscles and bones.</p>
+          </div>
+        </div>
+        <div class="step-item" onclick="activateStep(this, 2)">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Inspect &amp; Inquire</h4>
+            <p>Click a structure or type into the terminal to query its function, innervation, and knowledge status (Known vs. Unknown).</p>
+          </div>
+        </div>
+        <div class="step-item" onclick="activateStep(this, 3)">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Annotate in Context</h4>
+            <p>Write your study notes and explanations directly in the study pane as you learn the segment.</p>
+          </div>
+        </div>
+        <div class="step-item" onclick="activateStep(this, 4)">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Trigger the Audit</h4>
+            <p>Click "Audit Notes"—the tool scans what you wrote, locates an unmentioned or thin structure, moves the viewport directly to it, and drops a gap callout.</p>
+          </div>
+        </div>
+        <div class="step-item" onclick="activateStep(this, 5)">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Reinforce with "What-If"</h4>
+            <p>Update your note to address the gap; the tool responds with a clinical "what-if" scenario that tests real physiological consequence.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scope Boundary Reveals (Now / Later / Cut) -->
+    <section class="card" style="margin-bottom: 2rem;">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+        </svg>
+        Proof of Concept Boundary
+      </div>
+
+      <div class="boundary-tabs">
+        <button class="tab-btn active" onclick="switchTab('now')">Now (In PoC Scope)</button>
+        <button class="tab-btn" onclick="switchTab('later')">Later (Future Versions)</button>
+        <button class="tab-btn" onclick="switchTab('cut')">Explicitly Cut</button>
+      </div>
+
+      <!-- Tab: Now -->
+      <div id="tab-now" class="tab-panel active">
+        <ul class="boundary-list">
+          <li>
+            <span class="check-icon">✓</span>
+            <div>
+              <strong>Segmented Nervous &amp; Musculoskeletal View:</strong> A dedicated cervical/cranial or limb anatomical segment with toggleable nerve and muscle layers.
+            </div>
+          </li>
+          <li>
+            <span class="check-icon">✓</span>
+            <div>
+              <strong>Interactive Viewport with Camera Pan:</strong> Dynamic focal transition that smoothly pans/rotates to highlight specific anatomical coordinates.
+            </div>
+          </li>
+          <li>
+            <span class="check-icon">✓</span>
+            <div>
+              <strong>Dual Interaction:</strong> Click-to-inspect part selection combined with a terminal/chat prompt input.
+            </div>
+          </li>
+          <li>
+            <span class="check-icon">✓</span>
+            <div>
+              <strong>Personal Note Console:</strong> Space for the student to write notes in their own words.
+            </div>
+          </li>
+          <li>
+            <span class="check-icon">✓</span>
+            <div>
+              <strong>Audit Engine + Anchored Gap Callouts:</strong> Automated scan of student notes against segment ground truth, triggering camera movement and callouts.
+            </div>
+          </li>
+          <li>
+            <span class="check-icon">✓</span>
+            <div>
+              <strong>Clinical "What-If" Scenario Trigger:</strong> Presents a functional question after resolving a knowledge gap to test applied clinical logic.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab: Later -->
+      <div id="tab-later" class="tab-panel">
+        <ul class="boundary-list">
+          <li>
+            <span class="clock-icon">⏳</span>
+            <div>
+              <strong>Full-Body System Coverage:</strong> Cardiovascular, digestive, endocrine, and reproductive systems across the entire human body.
+            </div>
+          </li>
+          <li>
+            <span class="clock-icon">⏳</span>
+            <div>
+              <strong>Dual 2D/3D Mesh Switching:</strong> Seamless toggle between high-res histological slices and full textured 3D CAD meshes.
+            </div>
+          </li>
+          <li>
+            <span class="clock-icon">⏳</span>
+            <div>
+              <strong>Spaced Repetition Scheduler:</strong> Long-term flashcard decay curves and multi-session spaced retrieval algorithms.
+            </div>
+          </li>
+          <li>
+            <span class="clock-icon">⏳</span>
+            <div>
+              <strong>User Account &amp; Progress Persistence:</strong> Cloud login, synced cross-device storage, and persistent database profiles.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab: Cut -->
+      <div id="tab-cut" class="tab-panel">
+        <ul class="boundary-list">
+          <li>
+            <span class="cut-icon">✕</span>
+            <div>
+              <strong>Full-Body Rigging &amp; Muscle Deformations:</strong> Unnecessary technical complexity for proving active note-auditing.
+            </div>
+          </li>
+          <li>
+            <span class="cut-icon">✕</span>
+            <div>
+              <strong>Native Mobile App Packaging:</strong> Out of scope for this hackathon; the desktop browser persistent tab is the primary interface.
+            </div>
+          </li>
+          <li>
+            <span class="cut-icon">✕</span>
+            <div>
+              <strong>Multiplayer / Study Group Collaboration:</strong> Single-player focus keeps student privacy intact and scope tightly controlled.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 60-Second Demo Video Plan -->
+    <section class="card">
+      <div class="card-title">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+        </svg>
+        The 60-Second Demo Finish Line
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+        What someone sees in the 1-minute submission video that proves the core loop is fully working:
+      </p>
+      <div class="demo-track">
+        <div class="demo-step">
+          <span class="demo-time">0:00 – 0:15</span>
+          <h4>Overview &amp; Toggles</h4>
+          <p>Open tab to the segmented anatomy model. Toggle nervous and muscular layers on and off.</p>
+        </div>
+        <div class="demo-step">
+          <span class="demo-time">0:15 – 0:30</span>
+          <h4>Inspect &amp; Note-Taking</h4>
+          <p>Click a nerve/muscle, review details, and write study notes into the console.</p>
+        </div>
+        <div class="demo-step">
+          <span class="demo-time">0:30 – 0:45</span>
+          <h4>The Audit Moment</h4>
+          <p>Click "Audit Notes." Viewport glides to an omitted structure; callout flags the gap.</p>
+        </div>
+        <div class="demo-step">
+          <span class="demo-time">0:45 – 1:00</span>
+          <h4>"What-If" Clinical Challenge</h4>
+          <p>Add the missing note. The tool generates a clinical "what-if" scenario confirming mastery.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>NeuroSoma — Devpost Learn: Build With AI Hackathon</div>
+      <div class="canonical-note">Canonical specification: devpost/scope.md</div>
+    </footer>
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      const targetPanel = document.getElementById('tab-' + tabId);
+      if (targetPanel) targetPanel.classList.add('active');
+    }
+
+    function activateStep(el, stepNum) {
+      document.querySelectorAll('.step-item').forEach(item => item.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
+</body>
+</html>
