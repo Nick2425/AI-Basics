@@ -445,14 +445,9 @@
         treatSnoopAvatarEl = document.getElementById('treat-snoop-avatar');
         treatChompBubbleEl = document.getElementById('treat-chomp-bubble');
 
-        var saved = localStorage.getItem(TREAT_STORAGE_KEY);
-        if (saved !== null) {
-            treatCount = parseInt(saved, 10);
-            if (isNaN(treatCount)) treatCount = 10;
-        } else {
-            treatCount = 10;
-        }
-        if (treatCount >= TOTAL_TREATS) treatCount = 0;
+        // Always initialize treat count at 10 on tab reload
+        treatCount = 10;
+        localStorage.setItem(TREAT_STORAGE_KEY, '10');
 
         renderTreatSlots();
     }
