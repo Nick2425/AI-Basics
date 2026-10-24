@@ -202,19 +202,19 @@
 
     function handleViewCommand(face, log) {
         if (!face) {
-            log('Usage: <code>view &lt;front|back|left|right|top|bottom&gt;</code>');
+            log('Usage: <code>view &lt;anterior|posterior|superior|inferior|left|right&gt;</code>');
             return;
         }
-        var valid = ['front', 'back', 'left', 'right', 'top', 'bottom'];
+        var valid = ['front', 'back', 'left', 'right', 'top', 'bottom', 'anterior', 'posterior', 'superior', 'inferior'];
         var cleanFace = face.toLowerCase().trim();
         if (!valid.includes(cleanFace)) {
-            log('Invalid view face: "' + escapeHtml(face) + '". Options: <code>front</code>, <code>back</code>, <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>.');
+            log('Invalid view face: "' + escapeHtml(face) + '". Options: <code>anterior</code>, <code>posterior</code>, <code>superior</code>, <code>inferior</code>, <code>left</code>, <code>right</code>.');
             return;
         }
 
         if (window.NeuroViewport) {
             window.NeuroViewport.snapCameraTo(cleanFace);
-            log('Oriented camera to <strong>' + cleanFace.toUpperCase() + '</strong> orthogonal projection.');
+            log('Oriented camera to <strong>' + cleanFace.toUpperCase() + '</strong> projection.');
         }
     }
 
@@ -225,7 +225,7 @@
             '• <code>theme &lt;dark|light|pink&gt;</code> - Switch clinical visual theme<br>' +
             '• <code>layer &lt;nervous|musculo&gt; (on/off)</code> - Toggle anatomical systems<br>' +
             '• <code>inspect &lt;name&gt;</code> - Zoom to and isolate structure in 3D<br>' +
-            '• <code>view &lt;front|back|left|right|top|bottom&gt;</code> - Snap camera orthogonally<br>' +
+            '• <code>view &lt;anterior|posterior|superior|inferior|left|right&gt;</code> - Snap camera orthogonally<br>' +
             '• <code>recenter</code> - Reset camera to overview perspective (shortcut: R)<br>' +
             '• <code>clear</code> - Clear console output log'
         );

@@ -583,14 +583,14 @@
         viewCubeScene.add(dirLight);
 
         // Three.js BoxGeometry face order:
-        // [0: +X (RIGHT), 1: -X (LEFT), 2: +Y (TOP), 3: -Y (BOTTOM), 4: +Z (FRONT), 5: -Z (BACK)]
+        // [0: +X (RIGHT), 1: -X (LEFT), 2: +Y (SUPERIOR), 3: -Y (INFERIOR), 4: +Z (ANTERIOR), 5: -Z (POSTERIOR)]
         var faceConfigs = [
-            { text: 'RIGHT',  normal: new THREE.Vector3(1, 0, 0) },
-            { text: 'LEFT',   normal: new THREE.Vector3(-1, 0, 0) },
-            { text: 'TOP',    normal: new THREE.Vector3(0, 1, 0) },
-            { text: 'BOTTOM', normal: new THREE.Vector3(0, -1, 0) },
-            { text: 'FRONT',  normal: new THREE.Vector3(0, 0, 1) },
-            { text: 'BACK',   normal: new THREE.Vector3(0, 0, -1) }
+            { text: 'RIGHT',     normal: new THREE.Vector3(1, 0, 0) },
+            { text: 'LEFT',      normal: new THREE.Vector3(-1, 0, 0) },
+            { text: 'SUPERIOR',  normal: new THREE.Vector3(0, 1, 0) },
+            { text: 'INFERIOR',  normal: new THREE.Vector3(0, -1, 0) },
+            { text: 'ANTERIOR',  normal: new THREE.Vector3(0, 0, 1) },
+            { text: 'POSTERIOR', normal: new THREE.Vector3(0, 0, -1) }
         ];
 
         var materials = faceConfigs.map(function (cfg) {
@@ -607,7 +607,8 @@
             ctx.strokeRect(3, 3, 122, 122);
 
             ctx.fillStyle = '#f8fafc';
-            ctx.font = 'bold 22px Outfit, Inter, sans-serif';
+            var fontSize = cfg.text.length > 7 ? 'bold 16px' : (cfg.text.length > 5 ? 'bold 18px' : 'bold 21px');
+            ctx.font = fontSize + ' Outfit, Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(cfg.text, 64, 64);
@@ -739,12 +740,16 @@
 
     function snapCameraTo(direction) {
         var normalMap = {
-            front:  new THREE.Vector3(0, 0, 1),
-            back:   new THREE.Vector3(0, 0, -1),
-            right:  new THREE.Vector3(1, 0, 0),
-            left:   new THREE.Vector3(-1, 0, 0),
-            top:    new THREE.Vector3(0, 1, 0),
-            bottom: new THREE.Vector3(0, -1, 0)
+            front:      new THREE.Vector3(0, 0, 1),
+            anterior:   new THREE.Vector3(0, 0, 1),
+            back:       new THREE.Vector3(0, 0, -1),
+            posterior:  new THREE.Vector3(0, 0, -1),
+            right:      new THREE.Vector3(1, 0, 0),
+            left:       new THREE.Vector3(-1, 0, 0),
+            top:        new THREE.Vector3(0, 1, 0),
+            superior:   new THREE.Vector3(0, 1, 0),
+            bottom:     new THREE.Vector3(0, -1, 0),
+            inferior:   new THREE.Vector3(0, -1, 0)
         };
         var normal = normalMap[direction.toLowerCase()];
         if (normal) snapToNormal(normal);
