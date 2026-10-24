@@ -781,44 +781,11 @@
                 return;
             }
 
-            var handled = false;
-            var stepOrbit = 0.08;
-
-            if (e.key === 'ArrowLeft') {
-                rotateAroundTarget(-stepOrbit, 0);
-                handled = true;
-            } else if (e.key === 'ArrowRight') {
-                rotateAroundTarget(stepOrbit, 0);
-                handled = true;
-            } else if (e.key === 'ArrowUp') {
-                rotateAroundTarget(0, -stepOrbit);
-                handled = true;
-            } else if (e.key === 'ArrowDown') {
-                rotateAroundTarget(0, stepOrbit);
-                handled = true;
-            } else if (e.key === 'r' || e.key === 'R' || e.key === 'Home') {
+            if (e.key === 'r' || e.key === 'R' || e.key === 'Home') {
                 resetCamera(500);
-                handled = true;
-            }
-
-            if (handled) {
                 e.preventDefault();
             }
         });
-    }
-
-    function rotateAroundTarget(deltaTheta, deltaPhi) {
-        if (!camera || !controls || isCameraTweening) return;
-        var target = controls.target;
-        var offset = new THREE.Vector3().copy(camera.position).sub(target);
-        var spherical = new THREE.Spherical().setFromVector3(offset);
-        spherical.theta += deltaTheta;
-        spherical.phi += deltaPhi;
-        spherical.phi = Math.max(0.04, Math.min(Math.PI - 0.04, spherical.phi));
-        offset.setFromSpherical(spherical);
-        camera.position.copy(target).add(offset);
-        camera.lookAt(target);
-        controls.update();
     }
 
     /* ================================================================

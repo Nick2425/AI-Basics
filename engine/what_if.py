@@ -45,19 +45,19 @@ def evaluate_what_if(structure_id: str, question: str, user_answer: str) -> dict
     structure_name = structure.get("name", structure_id)
     verified_takeaway = f"Clinical Correlation: {clinical_core}"
 
-    # Friendly, encouraging chat-like evaluation
+    # Professional clinical evaluation
     if matched_concepts:
         feedback = (
-            f"Spot on! That's exactly right. You nailed the core concept: "
-            f"{', '.join(matched_concepts[:2])}! Great job connecting the anatomy to everyday function."
+            f"Assessment confirmed. Accurate clinical correlation identified: "
+            f"{', '.join(matched_concepts[:2])}."
         )
         is_correct = True
     else:
-        hint = structure.get('clinical_relevance') or structure.get('innervation') or 'this structure'
-        hint_core = hint.split(';')[0].split('.')[0].strip()
+        hint = structure.get('clinical_relevance') or structure.get('innervation') or 'this anatomical structure'
+        hint_core = hint.split(';')[0].strip()
         feedback = (
-            f"Good thinking! You're on the right track. The biggest takeaway to remember is: "
-            f"{hint_core}. I've saved a helpful summary into your study notes so you can review it anytime!"
+            f"Clinical correlation requiring reinforcement: "
+            f"{hint_core}."
         )
         is_correct = False
 

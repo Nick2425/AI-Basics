@@ -70,7 +70,7 @@
                         </div>
                         <button type="button" id="sticky-close-btn" class="sticky-close" aria-label="Close note">×</button>
                     </div>
-                    <textarea id="sticky-textarea" class="sticky-textarea" placeholder="Write study notes here in your own words..."></textarea>
+                    <textarea id="sticky-textarea" class="sticky-textarea" placeholder="Write clinical study notes here..."></textarea>
                     <div class="sticky-footer">
                         <span class="sticky-hint">Blank drafts are discarded</span>
                         <div class="sticky-actions">
@@ -95,28 +95,28 @@
                         <div class="chat-msg tutor">
                             <div class="chat-avatar">Tutor</div>
                             <div class="chat-bubble">
-                                Hello! I'm your anatomy study assistant. As you explore the 3D model and take notes in the left panel, I'll help you spot gaps and test your clinical understanding.
+                                NeuroSoma clinical study companion online. Anatomical knowledge graph loaded: 11 cranial and cervical structures.
                             </div>
                         </div>
                         <div class="chat-msg tutor">
                             <div class="chat-avatar">Tutor</div>
                             <div class="chat-bubble">
-                                Click <strong>Audit Notes</strong> anytime to run a check, or ask me about any structure below!
+                                Click <strong>Audit Notes</strong> to evaluate your anatomical coverage, or query structures below.
                             </div>
                         </div>
                     </div>
 
                     <!-- Proactive Audit Prompt Banner -->
                     <div id="audit-proactive-banner" class="audit-proactive-banner" style="display: none;">
-                        <div class="proactive-text">Ready to check your notes for gaps?</div>
+                        <div class="proactive-text">Ready to audit your notes?</div>
                         <div class="proactive-actions">
-                            <button type="button" id="btn-accept-audit" class="btn-primary btn-xs">Check Now</button>
+                            <button type="button" id="btn-accept-audit" class="btn-primary btn-xs">Audit Now</button>
                             <button type="button" id="btn-decline-audit" class="btn-secondary btn-xs">Later</button>
                         </div>
                     </div>
 
                     <form id="chat-input-form" class="chat-input-row" onsubmit="return false;">
-                        <input type="text" id="terminal-input" class="chat-input" placeholder="Ask a question or type 'audit'..." autocomplete="off">
+                        <input type="text" id="terminal-input" class="chat-input" placeholder="Type 'audit' or query structure..." autocomplete="off">
                         <button type="submit" id="chat-send-btn" class="btn-chat-send" aria-label="Send message">Send</button>
                     </form>
                 </div>
@@ -128,27 +128,27 @@
             <div class="modal-card glass-card">
                 <div class="modal-header">
                     <div>
-                        <span class="modal-badge">Quick Anatomy Check</span>
+                        <span class="modal-badge">Clinical "What-If" Challenge</span>
                         <h3 id="whatif-title" class="modal-title">Structure</h3>
                     </div>
                     <button type="button" id="whatif-close-btn" class="modal-close" aria-label="Close">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="gap-alert-box">
-                        <span class="gap-label">What we're looking at:</span>
+                        <span class="gap-label">Detected Knowledge Gap:</span>
                         <p id="whatif-gap-desc" class="gap-desc"></p>
                     </div>
                     <div class="scenario-box">
-                        <span class="scenario-label">Study Question:</span>
+                        <span class="scenario-label">Clinical Scenario:</span>
                         <p id="whatif-question" class="scenario-text"></p>
                     </div>
-                    <label class="modal-input-label" for="whatif-answer">In your own words, what do you think happens?</label>
-                    <textarea id="whatif-answer" class="modal-textarea" placeholder="Type your thoughts here in everyday terms (e.g., raspy voice, trouble breathing, weak shoulder)..."></textarea>
+                    <label class="modal-input-label" for="whatif-answer">Your Clinical Assessment:</label>
+                    <textarea id="whatif-answer" class="modal-textarea" placeholder="Explain the expected functional deficit or anatomical consequence..."></textarea>
                     <div id="whatif-feedback" class="whatif-feedback" style="display: none;"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="whatif-dismiss-btn" class="btn-secondary">Back to 3D View</button>
-                    <button type="button" id="whatif-submit-btn" class="btn-primary">Check Answer</button>
+                    <button type="button" id="whatif-dismiss-btn" class="btn-secondary">Skip For Now</button>
+                    <button type="button" id="whatif-submit-btn" class="btn-primary">Submit Clinical Assessment</button>
                 </div>
             </div>
         </div>

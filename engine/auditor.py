@@ -2,11 +2,12 @@
 
 Evaluates student study notes against ground-truth anatomical concepts
 in data/anatomy_graph.json to detect coverage blind spots, prioritize gaps,
-and generate clinical challenge prompts.
+and generate clinical challenge prompts with scenario variety.
 """
 
 import json
 import os
+import random
 import re
 
 _BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,22 +19,68 @@ with open(_DATA_PATH, "r", encoding="utf-8") as _f:
 _STRUCTURES = _ANATOMY_GRAPH.get("structures", [])
 _STRUCTURE_MAP = {s["id"]: s for s in _STRUCTURES}
 
-# Student-friendly scenario challenges calibrated for first-time anatomy learners
-_WHAT_IF_PROMPTS = {
-    "vagus_nerve": "If someone's vagus nerve (recurrent laryngeal branch) is irritated or pinched during neck surgery, why would their speaking voice suddenly sound hoarse or raspy?",
-    "spinal_accessory_nerve": "The spinal accessory nerve powers your trapezius and neck muscles. If it gets injured, why would someone struggle to shrug their shoulder or turn their chin to the side?",
-    "phrenic_nerve": "Anatomy students love the rhyme: 'C3, 4, 5 keeps the diaphragm alive!' If this nerve is hurt, why does normal breathing suddenly become difficult?",
-    "cervical_plexus": "This nerve cluster provides feeling to the skin of your neck, ear, and upper shoulder. If a clinician numbs it before a procedure, where will the patient lose feeling?",
-    "sternocleidomastoid": "This is the big muscle on the side of your neck that turns your head. If it goes into a sudden spasm (like waking up with a stiff neck), what happens to your head position?",
-    "trapezius_superior": "Your upper trapezius helps lift your shoulders and steady your neck. If someone strains this muscle carrying a heavy bag, what everyday movement feels weak or sore?",
-    "scalene_anterior": "The anterior scalene muscle sits right in front of the nerves traveling down into your arm. If this muscle gets tight and pinches them, what sensations might you feel in your arm?",
-    "anterior_scalene": "The anterior scalene muscle sits right in front of the nerves traveling down into your arm. If this muscle gets tight and pinches them, what sensations might you feel in your arm?",
-    "occipital_base": "This bone forms the foundation of your skull where vital nerves leave the brain. Why is a severe crack or fracture here considered a medical emergency?",
-    "c1_atlas": "The C1 vertebra is named Atlas because it balances your entire skull like the titan Atlas. Why is cracking this top neck ring so dangerous for your spinal cord?",
-    "c2_axis": "The C2 Axis vertebra has a small upright peg (the dens) that lets you shake your head 'no'. What happens if that peg snaps and pushes backward into the spinal cord?",
-    "c3_c7_vertebrae": "These neck bones stack up to protect your spinal cord and the nerves heading into your arms. If a cushion (disc) slips between them, what does it press on?",
-    "c3_c7_spine": "These neck bones stack up to protect your spinal cord and the nerves heading into your arms. If a cushion (disc) slips between them, what does it press on?"
+# Multi-scenario clinical challenge pools providing varied high-yield assessment
+_WHAT_IF_PROMPTS_POOL = {
+    "vagus_nerve": [
+        "During thyroidectomy or anterior cervical spine exposure, acute iatrogenic traction on the recurrent laryngeal branch of CN X occurs. What phonatory and laryngeal deficits manifest?",
+        "A patient presents with carotid sinus hypersensitivity. Stimulation of vagal afferent branches produces profound bradycardia and syncope. Through what autonomic pathway does CN X modulate cardiac conduction?",
+        "Unilateral lesion of the vagus nerve trunk at the jugular foramen impairs palatal and pharyngeal innervation. What anatomical asymmetry develops on physical examination of the uvula and soft palate?"
+    ],
+    "spinal_accessory_nerve": [
+        "During an excisional lymph node biopsy in the posterior cervical triangle, the spinal accessory nerve is severed. What characteristic shoulder deformity and motor deficits develop?",
+        "A patient suffers penetrating trauma to the superior posterior triangle of the neck. When instructed to shrug against resistance or turn the chin to the opposite side, what specific muscular weaknesses are observed?",
+        "Iatrogenic CN XI injury leads to chronic shoulder pain, lateral scapular winging, and inability to abduct the arm past 90 degrees. Why does loss of trapezius stabilization restrict glenohumeral elevation?"
+    ],
+    "phrenic_nerve": [
+        "Blunt cervical spine trauma injuring the C3–C5 ventral rami impairs phrenic nerve conduction. What diagnostic radiographic finding on upright chest radiography confirms diaphragmatic paralysis?",
+        "During open cardiac surgery with hypothermic pericardial slush cooling, cold-induced neuropraxia of the left phrenic nerve occurs. How does unilateral diaphragmatic paralysis alter pulmonary mechanics during spontaneous respiration?",
+        "A patient with high cervical spinal cord trauma develops acute respiratory failure. Correlating with the clinical axiom 'C3, 4, 5 keep the diaphragm alive', what ventilatory mechanism is abolished?"
+    ],
+    "cervical_plexus": [
+        "Prior to carotid endarterectomy, a superficial cervical plexus block is administered along the posterior border of the sternocleidomastoid. What cutaneous sensory dermatomes are anesthetized?",
+        "Trauma to the posterior cervical triangle at Erb's point injures superficial cutaneous branches of the cervical plexus. Deficits in which specific sensory branches impair neck and ear sensation?",
+        "An infiltrative deep neck mass compresses the ansa cervicalis (deep cervical plexus loop). What motor deficit involving infrahyoid strap muscle excursion occurs during deglutition?"
+    ],
+    "sternocleidomastoid": [
+        "A pediatric patient presents with congenital muscular torticollis due to fibrotic contracture of the unilateral sternocleidomastoid. Describe the characteristic resting rotational and lateral tilting head posture.",
+        "Unilateral dystonic spasm of the sternocleidomastoid occurs in adult spasmodic torticollis. In which direction does the chin rotate, and toward which shoulder does the vertex tilt?",
+        "In patients in severe respiratory distress, bilateral contraction of the sternocleidomastoid is observed as accessory inspiratory effort. What mechanical elevation does it exert on the clavicles and sternum?"
+    ],
+    "trapezius_superior": [
+        "Sustained postural load or compressive injury to the upper trapezius produces myofascial trigger points with referred cervico-occipital pain. Which movements of the scapula and cervical spine become restricted?",
+        "Loss of upper trapezius stabilization disrupts normal scapulohumeral rhythm during humeral abduction. Which rotator cuff tendon is predisposed to subacromial impingement when the scapula fails to upwardly rotate?",
+        "During physical examination of cranial nerve XI function, the examiner presses down on the shoulders while asking the patient to shrug. What primary scapular elevation muscle is being isolated?"
+    ],
+    "scalene_anterior": [
+        "Hypertrophy or anomalous fibrous bands of the anterior scalene muscle cause neurogenic thoracic outlet syndrome. Which neural trunks passing through the interscalene triangle are compressed?",
+        "During interscalene brachial plexus blockade, local anesthetic spreads anteriorly across the prevertebral fascia over the anterior scalene surface. Which motor nerve is unintentionally anesthetized?",
+        "In patients with respiratory failure, the anterior scalene acts as an accessory inspiratory muscle. What cranial-cervical origin and first-rib insertion allow it to elevate the upper thoracic cage?"
+    ],
+    "occipital_base": [
+        "A basilar skull fracture traversing the occipital condyles and foramen magnum compromises the hypoglossal canal and jugular foramen. Which cranial nerves are at acute risk of entrapment or avulsion?",
+        "Atlanto-occipital dislocation represents complete ligamentous disruption between the occipital condyles and C1. Why does this injury result in immediate respiratory arrest or fatal brainstem transection?",
+        "An expanding lesion at the occipital skull base compresses the medulla oblongata as it transitions into the cervical spinal cord. What cardiorespiratory and pyramidal tract signs indicate life-threatening tonsillar herniation?"
+    ],
+    "c1_atlas": [
+        "An axial loading impact to the vertex of the cranium produces a Jefferson fracture of the C1 atlas ring with lateral mass displacement. What ligament is at risk of catastrophic rupture?",
+        "Because the C1 vertebra lacks a vertebral body and spinous process, it forms a wide ring around the spinal cord (Steel's Rule of Thirds). How does this unique ring anatomy provide a safety margin during minimally displaced fractures?",
+        "Severe rotational trauma at the atlanto-axial joint causes C1-C2 subluxation. What symptoms arise from stretching or kinking the vertebral artery as it passes through the transverse foramen of the atlas?"
+    ],
+    "c2_axis": [
+        "A hyperextension injury of the cervical spine causes a bilateral fracture of the C2 pars interarticularis (Hangman's fracture). What mechanical instability develops between C2 and C3?",
+        "A Type II odontoid fracture occurs across the base of the dens where it attaches to the C2 vertebral body. Why is this fracture subtype notoriously prone to nonunion and posterior cord displacement?",
+        "The dens (odontoid process) of C2 serves as the rotational pivot for the skull and atlas. If the transverse ligament holding the dens against the anterior arch of C1 is torn, what cord compression occurs during cervical flexion?"
+    ],
+    "c3_c7_vertebrae": [
+        "A posterolateral disc herniation at the C5-C6 cervical motion segment impinges on the exiting C6 spinal nerve root. What specific reflex, motor weakness, and sensory dermatomal changes are elicited on examination?",
+        "Severe degenerative cervical spondylosis produces posterior osteophytic ridging and canal stenosis from C3 to C7. What clinical constellation of upper and lower motor neuron signs defines cervical spondylotic myelopathy?",
+        "The uncinate processes of C3-C7 form uncovertebral joints (joints of Luschka) flanking the intervertebral foramina. How does hypertrophy of these joints produce cervical radiculopathy even without acute disc extrusion?"
+    ]
 }
+
+# Alias mapping
+_WHAT_IF_PROMPTS_POOL["anterior_scalene"] = _WHAT_IF_PROMPTS_POOL["scalene_anterior"]
+_WHAT_IF_PROMPTS_POOL["c3_c7_spine"] = _WHAT_IF_PROMPTS_POOL["c3_c7_vertebrae"]
 
 
 def audit_notes(notes_payload: dict) -> dict:
@@ -67,7 +114,6 @@ def audit_notes(notes_payload: dict) -> dict:
 
     # If all structures have at least one note, check for the thinnest note
     if not unaddressed:
-        # Find note with fewest words
         sorted_by_depth = sorted(
             _STRUCTURES,
             key=lambda s: len(active_notes.get(s["id"], "").split())
@@ -98,32 +144,31 @@ def audit_notes(notes_payload: dict) -> dict:
     if not audited_terms:
         audited_terms = [c.lower() for c in key_concepts[:3]]
 
-    # Formulate friendly student-accessible gap explanation
+    # Formulate professional clinical gap explanation
     covered_names = [_STRUCTURE_MAP[cid]["name"].split("(")[0].strip() for cid in covered_ids if cid in _STRUCTURE_MAP]
     if covered_names:
-        first_few = ', '.join(covered_names[:2])
-        coverage_summary = f"You've taken notes on {first_few}"
+        coverage_summary = f"Your notes examine {', '.join(covered_names[:3])}"
     else:
-        coverage_summary = "You haven't written notes for this area yet"
+        coverage_summary = "Your notes have not yet begun structural annotation"
 
     if is_thin:
         gap_explanation = (
-            f"{coverage_summary}, but your notes on {target_name} are still brief. "
-            f"Let's look at how it works and check your understanding with a quick question!"
+            f"{coverage_summary}, but structural coverage on {target_name} is minimal. "
+            f"Key functional pathways ({', '.join(key_concepts[:3])}) require clinical reinforcement."
         )
     else:
         function_hint = target_structure.get("innervation") or target_structure.get("description", "")
-        short_hint = function_hint.split(';')[0].split('.')[0].strip()
+        clean_hint = function_hint.split(';')[0].strip()
         gap_explanation = (
-            f"{coverage_summary}, but you haven't explored {target_name} yet! "
-            f"This part helps with {short_hint.lower()}. Let's test your understanding:"
+            f"{coverage_summary}, but completely omit {target_name}. "
+            f"This structure governs {clean_hint.lower()}."
         )
 
-    # Retrieve or generate What-If prompt
-    what_if_prompt = _WHAT_IF_PROMPTS.get(
-        target_id,
-        f"If {target_name} is injured or inflamed, what everyday symptom or movement issue would develop?"
-    )
+    # Select varied scenario from pool
+    prompts = _WHAT_IF_PROMPTS_POOL.get(target_id, [
+        f"What-if acute injury impairs {target_name}? What specific clinical deficit develops?"
+    ])
+    what_if_prompt = random.choice(prompts)
 
     clean_tag = (target_structure.get("tag") or "").replace("[", "").replace("]", "")
 

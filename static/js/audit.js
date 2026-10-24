@@ -218,11 +218,11 @@
             }
         } else if (cmd === 'help') {
             logToChat('tutor',
-                'Here are some helpful things you can do:<br>' +
-                '• Click <strong>Audit Notes</strong> or type <strong>audit</strong> to test for blind spots.<br>' +
-                '• Type <strong>recenter</strong> to reset your 3D view.<br>' +
-                '• Type <strong>inspect &lt;name&gt;</strong> (e.g., <em>inspect vagus</em>) to focus on a structure.<br>' +
-                '• Use your <strong>arrow keys</strong> in the 3D viewport to orbit around structures smoothly.'
+                'Available clinical commands:<br>' +
+                '• Click <strong>Audit Notes</strong> or type <strong>audit</strong> to evaluate anatomical coverage.<br>' +
+                '• Type <strong>recenter</strong> or press <strong>R</strong> to reset the 3D perspective.<br>' +
+                '• Type <strong>inspect &lt;name&gt;</strong> (e.g., <em>inspect vagus</em>) to isolate a structure in 3D.<br>' +
+                '• Type <strong>view &lt;face&gt;</strong> to snap camera to orthogonal face (front, back, left, right, top).'
             );
         } else if (cmd === 'inspect' && arg) {
             inspectByName(arg);
@@ -293,7 +293,7 @@
        ================================================================ */
     function triggerAudit() {
         hideProactiveBanner();
-        logToChat('tutor', 'Checking your notes against our anatomy knowledge graph...');
+        logToChat('tutor', 'Initiating cranial-cervical knowledge-gap audit...');
 
         var notes = window.NeuroNotes ? NeuroNotes.getNotes() : {};
 
@@ -308,13 +308,13 @@
         })
         .catch(function (err) {
             console.error('[NeuroAudit] Audit error:', err);
-            logToChat('tutor', 'Could not complete audit right now: ' + escapeHtml(err.message));
+            logToChat('tutor', 'Could not complete audit: ' + escapeHtml(err.message));
         });
     }
 
     function handleAuditResult(data) {
         if (!data || data.status !== 'gap_detected') {
-            logToChat('tutor', 'Outstanding work! You have solid notes covering all 11 cranial and cervical structures.', 'feedback-correct');
+            logToChat('tutor', 'Audit complete: Comprehensive anatomical coverage verified across all 11 active structures.', 'feedback-correct');
             return;
         }
 
@@ -324,7 +324,7 @@
         var cameraCoords = data.camera_target;
 
         var messageHtml =
-            '<span class="gap-title">Knowledge Check: ' + escapeHtml(targetName) + '</span>' +
+            '<span class="gap-title">Detected Knowledge Gap: ' + escapeHtml(targetName) + '</span>' +
             escapeHtml(data.gap_explanation);
 
         logToChat('tutor', messageHtml, 'gap-card');
@@ -362,7 +362,7 @@
         }
 
         if (submitBtn) {
-            submitBtn.textContent = 'Check Answer';
+            submitBtn.textContent = 'Submit Clinical Assessment';
             submitBtn.disabled    = false;
         }
 
@@ -390,7 +390,7 @@
         }
 
         if (submitBtn) {
-            submitBtn.textContent = 'Checking...';
+            submitBtn.textContent = 'Evaluating Assessment...';
             submitBtn.disabled = true;
         }
 
@@ -410,7 +410,7 @@
         .catch(function (err) {
             console.error('[NeuroAudit] What-if error:', err);
             if (submitBtn) {
-                submitBtn.textContent = 'Check Answer';
+                submitBtn.textContent = 'Submit Clinical Assessment';
                 submitBtn.disabled = false;
             }
         });
@@ -422,15 +422,15 @@
 
         if (feedbackEl) {
             feedbackEl.className = 'whatif-feedback ' + (isCorrect ? 'feedback-correct' : 'feedback-partial');
-            feedbackEl.textContent = feedbackText + ' Saved to your study notes!';
+            feedbackEl.textContent = feedbackText + ' Takeaway saved to study notes.';
             feedbackEl.style.display = 'block';
         }
 
-        // Friendly confirmation in the conversational chat stream
+        // Professional confirmation in conversational chat stream
         var chatHtml =
-            (isCorrect ? '<strong>Spot on!</strong> ' : '<strong>Good try!</strong> ') +
+            (isCorrect ? '<strong>Assessment confirmed.</strong> ' : '<strong>Clinical correlation:</strong> ') +
             escapeHtml(feedbackText) +
-            '<br><br><em>Saved key takeaway to your study notes for ' + escapeHtml(resData.structure_name) + '.</em>';
+            '<br><br><em>Appended verified takeaway to study notes for ' + escapeHtml(resData.structure_name) + '.</em>';
 
         logToChat('tutor', chatHtml, isCorrect ? 'feedback-correct' : 'feedback-partial');
 
