@@ -36,8 +36,10 @@
                 </nav>
             </div>
             <div class="header-right">
-                <div class="theme-switcher" id="theme-switcher">
-                    <!-- Theme controls wired in a later slice -->
+                <div class="theme-switcher" id="theme-switcher" role="group" aria-label="Theme selection">
+                    <button type="button" class="theme-btn active" data-theme="dark" title="Surgical Dark">Dark</button>
+                    <button type="button" class="theme-btn" data-theme="light" title="Clean Light">Light</button>
+                    <button type="button" class="theme-btn" data-theme="pink" title="Off-Pink">Pink</button>
                 </div>
             </div>
         </header>
@@ -162,6 +164,7 @@
     <script src="/js/viewport.js"></script>
     <script src="/js/notes.js"></script>
     <script src="/js/audit.js"></script>
+    <script src="/js/terminal.js"></script>
     <script src="/js/app.js"></script>
 </body>
 </html>

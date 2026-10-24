@@ -199,92 +199,10 @@
     function handleUserMessage(rawText) {
         logToChat('user', escapeHtml(rawText));
 
-        var clean = rawText.toLowerCase().trim();
-        var parts = clean.split(/\s+/);
-        var cmd = parts[0];
-        var arg = parts.slice(1).join(' ');
-
-        if (cmd === 'audit' || clean.includes('audit') || clean.includes('check notes') || clean.includes('quiz')) {
-            triggerAudit();
-        } else if (cmd === 'recenter' || cmd === 'reset' || clean.includes('recenter') || clean.includes('reset view')) {
-            if (window.NeuroViewport) {
-                NeuroViewport.resetCamera(650);
-                logToChat('tutor', 'Camera recentered to overview.');
-            }
-        } else if (cmd === 'clear') {
-            if (terminalLogEl) {
-                terminalLogEl.innerHTML = '';
-                logToChat('tutor', 'Chat cleared. How can I help you study?');
-            }
-        } else if (cmd === 'help') {
-            logToChat('tutor',
-                'Available clinical commands:<br>' +
-                '• Click <strong>Audit Notes</strong> or type <strong>audit</strong> to evaluate anatomical coverage.<br>' +
-                '• Type <strong>recenter</strong> or press <strong>R</strong> to reset the 3D perspective.<br>' +
-                '• Type <strong>inspect &lt;name&gt;</strong> (e.g., <em>inspect vagus</em>) to isolate a structure in 3D.<br>' +
-                '• Type <strong>view &lt;face&gt;</strong> to snap camera to orthogonal face (front, back, left, right, top).'
-            );
-        } else if (cmd === 'inspect' && arg) {
-            inspectByName(arg);
-        } else if (cmd === 'view' && arg) {
-            if (window.NeuroViewport) {
-                NeuroViewport.snapCameraTo(arg);
-                logToChat('tutor', 'Orienting camera to ' + escapeHtml(arg) + ' view.');
-            }
-        } else {
-            // General conversational lookup
-            handleConversationalQuery(rawText);
-        }
-    }
-
-    function handleConversationalQuery(query) {
-        if (!window.NeuroViewport) {
-            logToChat('tutor', 'I am here to help you study anatomy! Click <strong>Audit Notes</strong> or type a structure name to inspect.');
-            return;
-        }
-
-        var structures = NeuroViewport.getAnatomyData() || [];
-        var q = query.toLowerCase();
-        var match = null;
-
-        for (var i = 0; i < structures.length; i++) {
-            var s = structures[i];
-            if (q.includes(s.id.replace(/_/g, ' ')) || q.includes(s.name.toLowerCase()) || s.id.toLowerCase().includes(q)) {
-                match = s;
-                break;
-            }
-        }
-
-        if (match) {
-            NeuroViewport.selectStructureById(match.id);
-            var info = match.clinical_relevance || match.innervation || match.description;
-            logToChat('tutor',
-                'Focused on <strong>' + escapeHtml(match.name) + '</strong> in 3D.<br>' +
-                escapeHtml(info)
-            );
-        } else {
-            logToChat('tutor',
-                'I can help you review the cranial nerves, cervical muscles, and spine! Type <strong>audit</strong> to run a knowledge check, or ask about any structure.'
-            );
-        }
-    }
-
-    function inspectByName(query) {
-        if (!window.NeuroViewport) return;
-        var structures = NeuroViewport.getAnatomyData() || [];
-        var match = null;
-        for (var i = 0; i < structures.length; i++) {
-            var s = structures[i];
-            if (s.id.toLowerCase().includes(query) || s.name.toLowerCase().includes(query)) {
-                match = s;
-                break;
-            }
-        }
-        if (match) {
-            NeuroViewport.selectStructureById(match.id);
-            logToChat('tutor', 'Highlighting <strong>' + escapeHtml(match.name) + '</strong> in 3D.');
-        } else {
-            logToChat('tutor', 'Could not find a structure matching "' + escapeHtml(query) + '". Try searching for "vagus", "phrenic", "atlas", or "trapezius".');
+        if (window.NeuroTerminal) {
+            window.NeuroTerminal.execute(rawText, function (contentHtml, extraClass) {
+                logToChat('tutor', contentHtml, extraClass);
+            });
         }
     }
 

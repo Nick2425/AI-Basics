@@ -34,6 +34,7 @@
     var allStructureMeshes = [];   // top-level groups/meshes per structure
     var anatomyData = null;
     var container   = null;
+    var gridHelper  = null;
 
     /* ================================================================
        init — called once from app.js
@@ -72,11 +73,11 @@
         addLights();
 
         // ---- Subtle grid plane ----
-        var grid = new THREE.GridHelper(14, 28, COLORS.gridMain, COLORS.gridSub);
-        grid.position.y = -0.8;
-        grid.material.opacity = 0.25;
-        grid.material.transparent = true;
-        scene.add(grid);
+        gridHelper = new THREE.GridHelper(14, 28, COLORS.gridMain, COLORS.gridSub);
+        gridHelper.position.y = -0.8;
+        gridHelper.material.opacity = 0.25;
+        gridHelper.material.transparent = true;
+        scene.add(gridHelper);
 
         // ---- Layer groups ----
         nervousGroup        = new THREE.Group();
@@ -807,6 +808,51 @@
     }
 
     /* ================================================================
+       Theme Synchronization
+       ================================================================ */
+    var THEME_CONFIGS = {
+        dark: {
+            canvasBg: 0x0a0f18,
+            fog:      0x0a0f18,
+            gridMain: 0x1a2744,
+            gridSub:  0x111c30,
+            gridOpacity: 0.25
+        },
+        light: {
+            canvasBg: 0xf8fafc,
+            fog:      0xf8fafc,
+            gridMain: 0xcbd5e1,
+            gridSub:  0xe2e8f0,
+            gridOpacity: 0.35
+        },
+        pink: {
+            canvasBg: 0x241820,
+            fog:      0x241820,
+            gridMain: 0x4a283e,
+            gridSub:  0x351d2c,
+            gridOpacity: 0.3
+        }
+    };
+
+    function setTheme(themeId) {
+        var cfg = THEME_CONFIGS[themeId] || THEME_CONFIGS.dark;
+        if (scene) {
+            scene.background.setHex(cfg.canvasBg);
+            if (scene.fog) {
+                scene.fog.color.setHex(cfg.fog);
+            }
+            if (gridHelper) {
+                scene.remove(gridHelper);
+                gridHelper = new THREE.GridHelper(14, 28, cfg.gridMain, cfg.gridSub);
+                gridHelper.position.y = -0.8;
+                gridHelper.material.opacity = cfg.gridOpacity;
+                gridHelper.material.transparent = true;
+                scene.add(gridHelper);
+            }
+        }
+    }
+
+    /* ================================================================
        Resize Handler
        ================================================================ */
     function onResize() {
@@ -844,6 +890,9 @@
 
         /** Recenter camera to default perspective view */
         resetCamera:     resetCamera,
+
+        /** Update 3D canvas background, fog, and grid to match theme */
+        setTheme:        setTheme,
 
         /** Select structure by ID with transparency isolation */
         selectStructureById: selectStructure,

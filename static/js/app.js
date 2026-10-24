@@ -91,5 +91,62 @@
                 e.stopPropagation();
             });
         });
+
+        /* ==============================================================
+           Theme Switcher (Surgical Dark, Clean Light, Off-Pink)
+           ============================================================== */
+        var THEME_STORAGE_KEY = 'neurosoma_theme';
+        var themeBtns = document.querySelectorAll('.theme-btn');
+
+        function setTheme(themeId) {
+            var validThemes = ['dark', 'light', 'pink'];
+            if (!validThemes.includes(themeId)) themeId = 'dark';
+
+            // 1. Update HTML data-theme attribute
+            document.documentElement.setAttribute('data-theme', themeId);
+
+            // 2. Update active button in header
+            themeBtns.forEach(function (btn) {
+                if (btn.getAttribute('data-theme') === themeId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // 3. Update 3D canvas and fog via NeuroViewport
+            if (window.NeuroViewport) {
+                NeuroViewport.setTheme(themeId);
+            }
+
+            // 4. Save to localStorage
+            try {
+                localStorage.setItem(THEME_STORAGE_KEY, themeId);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        themeBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var tid = this.getAttribute('data-theme');
+                if (tid) setTheme(tid);
+            });
+        });
+
+        // Restore saved theme on startup
+        try {
+            var savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            if (savedTheme) {
+                setTheme(savedTheme);
+            }
+        } catch (e) {}
+
+        window.NeuroTheme = {
+            setTheme: setTheme,
+            getTheme: function () {
+                return document.documentElement.getAttribute('data-theme') || 'dark';
+            }
+        };
     });
 })();
