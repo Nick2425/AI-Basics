@@ -44,15 +44,13 @@
 
         <!-- ==================== 3-Column Workspace ==================== -->
         <main id="workspace">
-            <!-- Left Panel: Study Notes Tree -->
+            <!-- Left Panel: Anatomical Hierarchy & Notes Tree -->
             <aside id="left-panel" class="panel">
-                <div class="panel-header">
-                    <span class="panel-title">Study Notes</span>
+                <div class="panel-header panel-header-with-badge">
+                    <span class="panel-title">Hierarchy & Notes</span>
+                    <span id="notes-count-badge" class="count-badge">0 notes</span>
                 </div>
                 <div class="panel-content" id="notes-tree">
-                    <div class="empty-state" id="notes-empty-state">
-                        <p>Click a structure to begin annotating</p>
-                    </div>
                 </div>
             </aside>
 
@@ -60,6 +58,25 @@
             <section id="viewport-section">
                 <div id="viewport-container"></div>
                 <div id="viewcube-container" aria-label="Orientation ViewCube"></div>
+
+                <!-- Floating Sticky Note Card -->
+                <div id="sticky-note-card" class="glass-card" style="display: none;">
+                    <div class="sticky-header">
+                        <div>
+                            <span id="sticky-tag" class="sticky-tag">[Nerve]</span>
+                            <h3 id="sticky-title" class="sticky-title">Structure Name</h3>
+                        </div>
+                        <button type="button" id="sticky-close-btn" class="sticky-close" aria-label="Close note">×</button>
+                    </div>
+                    <textarea id="sticky-textarea" class="sticky-textarea" placeholder="Write clinical study notes here..."></textarea>
+                    <div class="sticky-footer">
+                        <span class="sticky-hint">Blank drafts are discarded</span>
+                        <div class="sticky-actions">
+                            <button type="button" id="sticky-delete-btn" class="btn-secondary">Clear</button>
+                            <button type="button" id="sticky-save-btn" class="btn-primary">Save Note</button>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- Right Panel: Terminal Console -->
@@ -82,6 +99,7 @@
 
     <!-- Application Scripts -->
     <script src="/js/viewport.js"></script>
+    <script src="/js/notes.js"></script>
     <script src="/js/app.js"></script>
 </body>
 </html>

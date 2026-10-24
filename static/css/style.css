@@ -387,6 +387,299 @@ body {
     letter-spacing: 0.5px;
 }
 
+/* ==================== Floating Sticky Note ==================== */
+#sticky-note-card {
+    position: absolute;
+    width: 290px;
+    z-index: 25;
+    padding: 14px;
+    animation: fadeIn 0.16s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.sticky-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.sticky-title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.sticky-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+.sticky-close:hover {
+    color: var(--text-primary);
+    background: var(--border-hover);
+}
+
+.sticky-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 2px;
+}
+
+.sticky-textarea {
+    width: 100%;
+    min-height: 95px;
+    background: rgba(10, 15, 24, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--text-primary);
+    resize: vertical;
+    outline: none;
+    line-height: 1.5;
+}
+
+.sticky-textarea:focus {
+    border-color: var(--accent);
+}
+
+.sticky-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.sticky-hint {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.sticky-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    transition: background 0.12s, color 0.12s;
+}
+
+.btn-secondary:hover {
+    background: var(--border-hover);
+    color: var(--text-primary);
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #0a0f18;
+    border: none;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    transition: opacity 0.12s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* ==================== Hierarchical File-Tree Styles ==================== */
+.panel-header-with-badge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.count-badge {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 2px 7px;
+    border-radius: 10px;
+    letter-spacing: 0.3px;
+}
+
+.tree-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tree-folder {
+    margin-bottom: 6px;
+}
+
+.tree-folder-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    user-select: none;
+    transition: background 0.12s ease;
+}
+
+.tree-folder-header:hover {
+    background: var(--border-hover);
+}
+
+.tree-chevron {
+    font-size: 10px;
+    color: var(--text-muted);
+    transition: transform 0.16s ease;
+    display: inline-block;
+    width: 12px;
+    text-align: center;
+}
+
+.tree-folder.collapsed > .tree-folder-header .tree-chevron {
+    transform: rotate(-90deg);
+}
+
+.tree-folder.collapsed > .tree-folder-children {
+    display: none;
+}
+
+.tree-folder-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tree-folder-badge {
+    font-size: 10px;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1px 6px;
+    border-radius: 10px;
+}
+
+.tree-folder-children {
+    border-left: 1px solid var(--border-color);
+    margin-left: 11px;
+    padding-left: 8px;
+    margin-top: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tree-node {
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border: 1px solid transparent;
+}
+
+.tree-node:hover {
+    background: var(--border-color);
+}
+
+.tree-node.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+}
+
+.tree-node-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.tree-node-name {
+    font-size: 12px;
+    color: var(--text-primary);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tree-node-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.tree-note-indicator {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+}
+
+.tree-note-preview {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.35;
+    background: rgba(10, 15, 24, 0.4);
+    border-radius: 4px;
+    padding: 4px 6px;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.tree-note-delete {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 1px 3px;
+    border-radius: 3px;
+    line-height: 1;
+}
+
+.tree-note-delete:hover {
+    color: #ef4444;
+}
+
 /* ==================== Scrollbar ==================== */
 ::-webkit-scrollbar {
     width: 5px;

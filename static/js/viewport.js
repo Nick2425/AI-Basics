@@ -92,6 +92,9 @@
         // ---- Resize handler ----
         window.addEventListener('resize', onResize);
 
+        // ---- Raycaster click-to-inspect ----
+        setupViewportRaycaster(container);
+
         // ---- ViewCube (Autodesk Inventor style) ----
         initViewCube(viewCubeContainerEl);
 
@@ -399,6 +402,155 @@
     }
 
     /* ================================================================
+       Selection & Transparency Dimming
+       ================================================================ */
+    var selectedStructureId = null;
+    var selectedAnchor3D = null;
+    var selectCallbacks   = [];
+    var deselectCallbacks = [];
+
+    function setupViewportRaycaster(containerEl) {
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+        var isDown = false;
+        var startX = 0, startY = 0;
+
+        containerEl.addEventListener('pointerdown', function (e) {
+            if (e.target !== renderer.domElement) return;
+            isDown = true;
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+
+        containerEl.addEventListener('pointerup', function (e) {
+            if (!isDown || e.target !== renderer.domElement) return;
+            isDown = false;
+
+            var dx = Math.abs(e.clientX - startX);
+            var dy = Math.abs(e.clientY - startY);
+            if (dx > 5 || dy > 5) return; // user was orbiting/dragging
+
+            var rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            var interactable = [];
+            if (nervousGroup && nervousGroup.visible) interactable.push(nervousGroup);
+            if (musculoskeletalGroup && musculoskeletalGroup.visible) interactable.push(musculoskeletalGroup);
+
+            var intersects = raycaster.intersectObjects(interactable, true);
+            if (intersects.length > 0) {
+                var structure = null;
+                var curr = intersects[0].object;
+                while (curr && curr !== scene) {
+                    if (curr.userData && curr.userData.structure) {
+                        structure = curr.userData.structure;
+                        break;
+                    }
+                    curr = curr.parent;
+                }
+
+                if (structure) {
+                    selectStructure(structure.id, intersects[0].point);
+                    return;
+                }
+            }
+
+            deselectStructure();
+        });
+    }
+
+    function selectStructure(structureId, hitPoint) {
+        selectedStructureId = structureId;
+        var structure = getStructureById(structureId);
+        if (!structure) return;
+
+        // Dim all non-selected structures to 25% opacity
+        [nervousGroup, musculoskeletalGroup].forEach(function (grp) {
+            if (!grp) return;
+            grp.children.forEach(function (child) {
+                var isTarget = (child.userData && child.userData.structureId === structureId);
+                child.traverse(function (mesh) {
+                    if (mesh.isMesh && mesh.material) {
+                        mesh.material.transparent = true;
+                        if (isTarget) {
+                            if (mesh.material.emissive && mesh.material.emissive.getHex() === COLORS.nerveGlow) {
+                                mesh.material.opacity = 0.2;
+                            } else {
+                                mesh.material.opacity = 1.0;
+                            }
+                            mesh.material.depthWrite = true;
+                        } else {
+                            mesh.material.opacity = 0.25;
+                            mesh.material.depthWrite = false;
+                        }
+                    }
+                });
+            });
+        });
+
+        // Determine 3D anchor position for sticky note
+        var anchor3D = hitPoint;
+        if (!anchor3D && structure.coordinates && structure.coordinates.camera_target) {
+            var ct = structure.coordinates.camera_target;
+            anchor3D = new THREE.Vector3(ct[0], ct[1], ct[2]);
+        }
+        selectedAnchor3D = anchor3D;
+        var screenPos = getScreenCoordinates(anchor3D);
+
+        selectCallbacks.forEach(function (cb) {
+            try { cb(structure, screenPos, anchor3D); } catch (err) { console.error(err); }
+        });
+    }
+
+    function deselectStructure() {
+        if (!selectedStructureId) return;
+        selectedStructureId = null;
+        selectedAnchor3D = null;
+
+        [nervousGroup, musculoskeletalGroup].forEach(function (grp) {
+            if (!grp) return;
+            grp.traverse(function (child) {
+                if (child.isMesh && child.material) {
+                    if (child.material.emissive && child.material.emissive.getHex() === COLORS.nerveGlow) {
+                        child.material.opacity = 0.1;
+                        child.material.depthWrite = false;
+                    } else {
+                        child.material.opacity = 1.0;
+                        child.material.depthWrite = true;
+                    }
+                    child.material.transparent = true;
+                }
+            });
+        });
+
+        deselectCallbacks.forEach(function (cb) {
+            try { cb(); } catch (err) { console.error(err); }
+        });
+    }
+
+    function getStructureById(id) {
+        if (!anatomyData) return null;
+        for (var i = 0; i < anatomyData.length; i++) {
+            if (anatomyData[i].id === id) return anatomyData[i];
+        }
+        return null;
+    }
+
+    function getScreenCoordinates(vec3) {
+        if (!vec3 || !container || !camera) return { x: 200, y: 150 };
+        var v = (vec3 instanceof THREE.Vector3) ? vec3.clone() : new THREE.Vector3(vec3[0], vec3[1], vec3[2]);
+        v.project(camera);
+        var rect = container.getBoundingClientRect();
+        return {
+            x: ((v.x + 1) * rect.width) / 2,
+            y: ((-v.y + 1) * rect.height) / 2
+        };
+    }
+
+    /* ================================================================
        Autodesk Inventor-Style ViewCube & Synchronization
        ================================================================ */
     var viewCubeScene, viewCubeCamera, viewCubeRenderer, viewCubeMesh;
@@ -644,6 +796,28 @@
 
         /** Snap main camera to orthogonal direction (front, back, right, left, top, bottom) */
         snapCameraTo:    snapCameraTo,
+
+        /** Select structure by ID with transparency isolation */
+        selectStructureById: selectStructure,
+
+        /** Deselect active structure and restore full opacity */
+        deselectStructure:   deselectStructure,
+
+        /** Listeners for selection */
+        onSelect:   function (cb) { selectCallbacks.push(cb); },
+        onDeselect: function (cb) { deselectCallbacks.push(cb); },
+
+        /** Lookup structure metadata by id */
+        getStructureById:    getStructureById,
+
+        /** Get projected screen coordinates { x, y } from 3D vector */
+        getScreenCoordinates: getScreenCoordinates,
+
+        /** Get active 3D anchor position */
+        getSelectedAnchor3D: function () { return selectedAnchor3D; },
+
+        /** Get currently selected structure ID */
+        getSelectedStructureId: function () { return selectedStructureId; },
 
         /** Toggle layer visibility */
         setLayerVisible: function (system, visible) {

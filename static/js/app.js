@@ -22,6 +22,13 @@
         }
 
         /* ==============================================================
+           Initialize Study Notes & Left Tree
+           ============================================================== */
+        if (window.NeuroNotes) {
+            NeuroNotes.init();
+        }
+
+        /* ==============================================================
            Layer visibility toggles (View > Layers)
            ============================================================== */
         var layerNervous = document.getElementById('layer-nervous');

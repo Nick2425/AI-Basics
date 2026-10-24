@@ -29,7 +29,7 @@ Build mode: learn
   Learner check: Drag the model around and watch the ViewCube follow. Click a few cube faces. Toggle layers on and off via the View menu. Does the synchronization feel right?
   Commit: `Add synchronized ViewCube and layer toggle menu`
 
-- [ ] **3. Click-to-inspect with transparency isolation and sticky notes**
+- [x] **3. Click-to-inspect with transparency isolation and sticky notes**
   Becomes usable: Clicking an anatomical structure dims everything else to 25% opacity, highlights the target, and opens a floating sticky-note popup where you can write and save study notes. Notes appear in the left-panel tree. A sample note is pre-loaded on launch.
   Why now: This is the annotation half of the unique kernel — the audit can't detect gaps in notes that don't exist yet. Transparency isolation is shared between inspection and audit, so building it here means the audit slice gets it for free.
   PRD ref: `prd.md > Features > 2. Interactive Sticky-Note Annotations`, `prd.md > Features > 1. Viewport, ViewCube & Transparency Isolation` (transparency dimming)
@@ -61,7 +61,7 @@ Build mode: learn
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — after slice 3 (inspect, notes, and transparency working), the annotation loop is complete and ready for feedback before building the audit kernel
+- [x] Early usable behavior explored — after slice 3 (inspect, notes, and transparency working), the annotation loop is complete and ready for feedback before building the audit kernel
 - [ ] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
