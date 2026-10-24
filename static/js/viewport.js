@@ -98,6 +98,9 @@
         // ---- ViewCube (Autodesk Inventor style) ----
         initViewCube(viewCubeContainerEl);
 
+        // ---- Keyboard Controls (Arrow keys & Recenter) ----
+        setupKeyboardControls();
+
         // ---- Render loop ----
         animate();
     }
@@ -746,6 +749,78 @@
         if (normal) snapToNormal(normal);
     }
 
+    function glideToTarget(coords, durationMs) {
+        if (!camera || !controls || !coords) return;
+        var dur = durationMs || 700;
+        var tx = coords[0] !== undefined ? coords[0] : (coords.x || 0);
+        var ty = coords[1] !== undefined ? coords[1] : (coords.y || 1.8);
+        var tz = coords[2] !== undefined ? coords[2] : (coords.z || 0);
+
+        var lookAtPos = new THREE.Vector3(tx, ty, tz);
+        var offset = new THREE.Vector3(1.8, 0.9, 2.8);
+        var targetCamPos = lookAtPos.clone().add(offset);
+
+        tweenCameraTo(targetCamPos, lookAtPos, dur);
+    }
+
+    var DEFAULT_CAM_POS = new THREE.Vector3(3.5, 2.8, 5.5);
+    var DEFAULT_TARGET  = new THREE.Vector3(0, 1.8, 0);
+
+    function resetCamera(durationMs) {
+        if (!camera || !controls || isCameraTweening) return;
+        var dur = durationMs || 650;
+        deselectStructure();
+        tweenCameraTo(DEFAULT_CAM_POS.clone(), DEFAULT_TARGET.clone(), dur);
+    }
+
+    function setupKeyboardControls() {
+        window.addEventListener('keydown', function (e) {
+            // Ignore keystrokes when typing in text inputs or textareas
+            var activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+            if (activeTag === 'input' || activeTag === 'textarea' || (document.activeElement && document.activeElement.isContentEditable)) {
+                return;
+            }
+
+            var handled = false;
+            var stepOrbit = 0.08;
+
+            if (e.key === 'ArrowLeft') {
+                rotateAroundTarget(-stepOrbit, 0);
+                handled = true;
+            } else if (e.key === 'ArrowRight') {
+                rotateAroundTarget(stepOrbit, 0);
+                handled = true;
+            } else if (e.key === 'ArrowUp') {
+                rotateAroundTarget(0, -stepOrbit);
+                handled = true;
+            } else if (e.key === 'ArrowDown') {
+                rotateAroundTarget(0, stepOrbit);
+                handled = true;
+            } else if (e.key === 'r' || e.key === 'R' || e.key === 'Home') {
+                resetCamera(500);
+                handled = true;
+            }
+
+            if (handled) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    function rotateAroundTarget(deltaTheta, deltaPhi) {
+        if (!camera || !controls || isCameraTweening) return;
+        var target = controls.target;
+        var offset = new THREE.Vector3().copy(camera.position).sub(target);
+        var spherical = new THREE.Spherical().setFromVector3(offset);
+        spherical.theta += deltaTheta;
+        spherical.phi += deltaPhi;
+        spherical.phi = Math.max(0.04, Math.min(Math.PI - 0.04, spherical.phi));
+        offset.setFromSpherical(spherical);
+        camera.position.copy(target).add(offset);
+        camera.lookAt(target);
+        controls.update();
+    }
+
     /* ================================================================
        Animation Loop
        ================================================================ */
@@ -796,6 +871,12 @@
 
         /** Snap main camera to orthogonal direction (front, back, right, left, top, bottom) */
         snapCameraTo:    snapCameraTo,
+
+        /** Smooth camera glide to anatomical 3D coordinates */
+        glideToTarget:   glideToTarget,
+
+        /** Recenter camera to default perspective view */
+        resetCamera:     resetCamera,
 
         /** Select structure by ID with transparency isolation */
         selectStructureById: selectStructure,

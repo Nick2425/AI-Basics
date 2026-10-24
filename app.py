@@ -5,7 +5,7 @@ Run with: python app.py
 Access at: http://localhost:8000
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 import json
@@ -30,6 +30,9 @@ _data_path = os.path.join(_base_dir, "data", "anatomy_graph.json")
 with open(_data_path, "r", encoding="utf-8") as _f:
     _anatomy_data = json.load(_f)
 
+from engine.auditor import audit_notes
+from engine.what_if import evaluate_what_if
+
 # ---------------------------------------------------------------------------
 # API Routes (must be registered before the static file catch-all)
 # ---------------------------------------------------------------------------
@@ -38,6 +41,31 @@ with open(_data_path, "r", encoding="utf-8") as _f:
 async def get_anatomy():
     """Return all anatomical structures with coordinates and metadata."""
     return JSONResponse(content=_anatomy_data)
+
+
+@app.post("/api/audit")
+async def run_audit(request: Request):
+    """Analyze notes against anatomy knowledge graph and detect coverage gaps."""
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    result = audit_notes(body)
+    return JSONResponse(content=result)
+
+
+@app.post("/api/what-if")
+async def run_what_if(request: Request):
+    """Validate student clinical answer and generate verified takeaway."""
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    structure_id = body.get("structure_id", "")
+    question = body.get("question", "")
+    answer = body.get("answer", "")
+    result = evaluate_what_if(structure_id, question, answer)
+    return JSONResponse(content=result)
 
 # ---------------------------------------------------------------------------
 # Static file serving (catch-all — must be last)

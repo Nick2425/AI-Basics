@@ -7,22 +7,69 @@
       "name": "Cranial Nerve X (Vagus Nerve)",
       "system": "nervous",
       "category": "Cranial Nerve",
-      "tag": "[Nerve]",
+      "tag": "Nerve",
       "description": "The longest cranial nerve, descending from the brainstem through the neck into the thorax and abdomen. Principal parasympathetic trunk controlling heart rate, digestion, and respiration.",
       "innervation": "Parasympathetic to heart, lungs, and digestive tract; motor to larynx and pharynx via recurrent laryngeal and pharyngeal branches",
       "clinical_relevance": "Recurrent laryngeal nerve injury during thyroid or cervical spine surgery causes vocal cord paralysis and hoarseness. Vagal tone modulates resting heart rate.",
-      "key_concepts": ["parasympathetic", "vagal tone", "recurrent laryngeal", "pharynx", "larynx", "heart rate", "bradycardia", "jugular foramen", "cranial nerve X", "vocal cord"],
+      "key_concepts": [
+        "parasympathetic",
+        "vagal tone",
+        "recurrent laryngeal",
+        "pharynx",
+        "larynx",
+        "heart rate",
+        "bradycardia",
+        "jugular foramen",
+        "cranial nerve X",
+        "vocal cord"
+      ],
       "coordinates": {
-        "camera_target": [0.35, 1.8, 0.4],
+        "camera_target": [
+          0.35,
+          1.8,
+          0.4
+        ],
         "points": [
-          [0.30, 3.00, 0.30],
-          [0.33, 2.60, 0.33],
-          [0.36, 2.20, 0.36],
-          [0.38, 1.80, 0.39],
-          [0.37, 1.40, 0.42],
-          [0.35, 1.00, 0.44],
-          [0.33, 0.60, 0.46],
-          [0.30, 0.20, 0.48]
+          [
+            0.3,
+            3.0,
+            0.3
+          ],
+          [
+            0.33,
+            2.6,
+            0.33
+          ],
+          [
+            0.36,
+            2.2,
+            0.36
+          ],
+          [
+            0.38,
+            1.8,
+            0.39
+          ],
+          [
+            0.37,
+            1.4,
+            0.42
+          ],
+          [
+            0.35,
+            1.0,
+            0.44
+          ],
+          [
+            0.33,
+            0.6,
+            0.46
+          ],
+          [
+            0.3,
+            0.2,
+            0.48
+          ]
         ]
       }
     },
@@ -31,20 +78,57 @@
       "name": "Cranial Nerve XI (Spinal Accessory Nerve)",
       "system": "nervous",
       "category": "Cranial Nerve",
-      "tag": "[Nerve]",
+      "tag": "Nerve",
       "description": "The eleventh cranial nerve with both cranial and spinal roots. Exits the skull via the jugular foramen and crosses the posterior triangle of the neck to innervate the trapezius and sternocleidomastoid.",
       "innervation": "Motor to sternocleidomastoid and trapezius muscles",
       "clinical_relevance": "Vulnerable during posterior triangle lymph node biopsy. Damage causes shoulder drop, scapular winging, and weakness in head turning.",
-      "key_concepts": ["sternocleidomastoid", "trapezius", "posterior triangle", "jugular foramen", "shoulder drop", "scapular winging", "cranial nerve XI", "head rotation"],
+      "key_concepts": [
+        "sternocleidomastoid",
+        "trapezius",
+        "posterior triangle",
+        "jugular foramen",
+        "shoulder drop",
+        "scapular winging",
+        "cranial nerve XI",
+        "head rotation"
+      ],
       "coordinates": {
-        "camera_target": [0.80, 2.40, -0.30],
+        "camera_target": [
+          0.8,
+          2.4,
+          -0.3
+        ],
         "points": [
-          [0.20, 3.00, -0.10],
-          [0.35, 2.80, -0.15],
-          [0.55, 2.60, -0.25],
-          [0.80, 2.40, -0.35],
-          [1.10, 2.20, -0.45],
-          [1.40, 2.00, -0.50]
+          [
+            0.2,
+            3.0,
+            -0.1
+          ],
+          [
+            0.35,
+            2.8,
+            -0.15
+          ],
+          [
+            0.55,
+            2.6,
+            -0.25
+          ],
+          [
+            0.8,
+            2.4,
+            -0.35
+          ],
+          [
+            1.1,
+            2.2,
+            -0.45
+          ],
+          [
+            1.4,
+            2.0,
+            -0.5
+          ]
         ]
       }
     },
@@ -53,21 +137,64 @@
       "name": "Phrenic Nerve",
       "system": "nervous",
       "category": "Cervical Nerve",
-      "tag": "[Nerve]",
+      "tag": "Nerve",
       "description": "Principal motor nerve to the diaphragm, arising from C3, C4, and C5 nerve roots. Descends over the anterior surface of the anterior scalene muscle through the thorax to the diaphragm.",
       "innervation": "Motor to the diaphragm; sensory to the pericardium, mediastinal pleura, and diaphragmatic peritoneum",
       "clinical_relevance": "Phrenic nerve palsy from cervical trauma, surgery, or cooling during cardiac procedures causes hemidiaphragm paralysis and respiratory compromise. Mnemonic: C3, 4, 5 keep the diaphragm alive.",
-      "key_concepts": ["diaphragm", "C3", "C4", "C5", "respiration", "hemidiaphragm", "cervical plexus", "anterior scalene", "phrenic palsy", "breathing"],
+      "key_concepts": [
+        "diaphragm",
+        "C3",
+        "C4",
+        "C5",
+        "respiration",
+        "hemidiaphragm",
+        "cervical plexus",
+        "anterior scalene",
+        "phrenic palsy",
+        "breathing"
+      ],
       "coordinates": {
-        "camera_target": [0.45, 1.50, 0.30],
+        "camera_target": [
+          0.45,
+          1.5,
+          0.3
+        ],
         "points": [
-          [0.45, 2.20, 0.20],
-          [0.46, 1.90, 0.24],
-          [0.45, 1.60, 0.28],
-          [0.43, 1.30, 0.32],
-          [0.40, 1.00, 0.36],
-          [0.37, 0.60, 0.40],
-          [0.33, 0.20, 0.44]
+          [
+            0.45,
+            2.2,
+            0.2
+          ],
+          [
+            0.46,
+            1.9,
+            0.24
+          ],
+          [
+            0.45,
+            1.6,
+            0.28
+          ],
+          [
+            0.43,
+            1.3,
+            0.32
+          ],
+          [
+            0.4,
+            1.0,
+            0.36
+          ],
+          [
+            0.37,
+            0.6,
+            0.4
+          ],
+          [
+            0.33,
+            0.2,
+            0.44
+          ]
         ]
       }
     },
@@ -76,20 +203,59 @@
       "name": "Cervical Plexus",
       "system": "nervous",
       "category": "Nerve Plexus",
-      "tag": "[Nerve]",
+      "tag": "Nerve",
       "description": "Network formed by the anterior rami of C1-C4 spinal nerves. Emerges from the lateral neck deep to the sternocleidomastoid, providing cutaneous and muscular branches.",
       "innervation": "Cutaneous branches to neck, ear, and shoulder (great auricular, lesser occipital, transverse cervical, supraclavicular); muscular branches to infrahyoid muscles via ansa cervicalis",
       "clinical_relevance": "Cervical plexus block provides regional anesthesia for carotid endarterectomy and anterior neck procedures. The great auricular nerve is the most commonly injured nerve during face-lift surgery.",
-      "key_concepts": ["C1", "C2", "C3", "C4", "great auricular nerve", "lesser occipital", "transverse cervical", "supraclavicular", "ansa cervicalis", "nerve block"],
+      "key_concepts": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "great auricular nerve",
+        "lesser occipital",
+        "transverse cervical",
+        "supraclavicular",
+        "ansa cervicalis",
+        "nerve block"
+      ],
       "coordinates": {
-        "camera_target": [0.70, 2.30, 0.15],
+        "camera_target": [
+          0.7,
+          2.3,
+          0.15
+        ],
         "points": [
-          [0.30, 2.70, 0.08],
-          [0.45, 2.55, 0.10],
-          [0.60, 2.40, 0.14],
-          [0.80, 2.30, 0.18],
-          [1.00, 2.20, 0.15],
-          [1.15, 2.10, 0.10]
+          [
+            0.3,
+            2.7,
+            0.08
+          ],
+          [
+            0.45,
+            2.55,
+            0.1
+          ],
+          [
+            0.6,
+            2.4,
+            0.14
+          ],
+          [
+            0.8,
+            2.3,
+            0.18
+          ],
+          [
+            1.0,
+            2.2,
+            0.15
+          ],
+          [
+            1.15,
+            2.1,
+            0.1
+          ]
         ]
       }
     },
@@ -98,21 +264,64 @@
       "name": "Sternocleidomastoid (SCM)",
       "system": "musculoskeletal",
       "category": "Muscle",
-      "tag": "[Muscle]",
+      "tag": "Muscle",
       "description": "Large, superficial muscle of the anterolateral neck. Extends obliquely from the mastoid process of the temporal bone to the manubrium of the sternum and medial clavicle. Divides the neck into anterior and posterior triangles.",
       "function": "Unilateral contraction: ipsilateral lateral flexion and contralateral rotation of the head. Bilateral contraction: flexion of the neck and extension of the head at the atlanto-occipital joint.",
       "clinical_relevance": "Congenital muscular torticollis from unilateral SCM fibrosis causes head tilt and limited range of motion. The SCM is the key anatomical landmark dividing the anterior and posterior triangles of the neck.",
-      "key_concepts": ["mastoid process", "sternum", "clavicle", "torticollis", "head rotation", "lateral flexion", "anterior triangle", "posterior triangle", "accessory nerve", "neck landmark"],
+      "key_concepts": [
+        "mastoid process",
+        "sternum",
+        "clavicle",
+        "torticollis",
+        "head rotation",
+        "lateral flexion",
+        "anterior triangle",
+        "posterior triangle",
+        "accessory nerve",
+        "neck landmark"
+      ],
       "coordinates": {
-        "camera_target": [0.40, 1.50, 0.45],
+        "camera_target": [
+          0.4,
+          1.5,
+          0.45
+        ],
         "points": [
-          [0.35, 2.90, 0.15],
-          [0.45, 2.40, 0.28],
-          [0.50, 1.90, 0.40],
-          [0.48, 1.40, 0.52],
-          [0.40, 0.90, 0.62],
-          [0.25, 0.40, 0.72],
-          [0.12, 0.00, 0.78]
+          [
+            0.35,
+            2.9,
+            0.15
+          ],
+          [
+            0.45,
+            2.4,
+            0.28
+          ],
+          [
+            0.5,
+            1.9,
+            0.4
+          ],
+          [
+            0.48,
+            1.4,
+            0.52
+          ],
+          [
+            0.4,
+            0.9,
+            0.62
+          ],
+          [
+            0.25,
+            0.4,
+            0.72
+          ],
+          [
+            0.12,
+            0.0,
+            0.78
+          ]
         ]
       }
     },
@@ -121,20 +330,59 @@
       "name": "Trapezius (Superior Fibers)",
       "system": "musculoskeletal",
       "category": "Muscle",
-      "tag": "[Muscle]",
+      "tag": "Muscle",
       "description": "Upper portion of the trapezius muscle, extending from the superior nuchal line and external occipital protuberance to the lateral third of the clavicle and acromion of the scapula.",
       "function": "Elevates the scapula (shrugging), upwardly rotates the scapula during arm abduction, and assists in extension and lateral flexion of the cervical spine.",
       "clinical_relevance": "Spinal accessory nerve injury causes trapezius weakness, leading to shoulder drop, inability to shrug, and difficulty with overhead arm movement. Chronic trapezius myalgia is common in desk workers.",
-      "key_concepts": ["scapula", "shoulder elevation", "acromion", "ligamentum nuchae", "accessory nerve", "upper back", "shoulder drop", "shrug", "nuchal line", "arm abduction"],
+      "key_concepts": [
+        "scapula",
+        "shoulder elevation",
+        "acromion",
+        "ligamentum nuchae",
+        "accessory nerve",
+        "upper back",
+        "shoulder drop",
+        "shrug",
+        "nuchal line",
+        "arm abduction"
+      ],
       "coordinates": {
-        "camera_target": [0.90, 2.50, -0.55],
+        "camera_target": [
+          0.9,
+          2.5,
+          -0.55
+        ],
         "points": [
-          [0.05, 3.20, -0.45],
-          [0.25, 3.00, -0.50],
-          [0.55, 2.80, -0.55],
-          [0.90, 2.50, -0.57],
-          [1.30, 2.20, -0.55],
-          [1.70, 2.00, -0.50]
+          [
+            0.05,
+            3.2,
+            -0.45
+          ],
+          [
+            0.25,
+            3.0,
+            -0.5
+          ],
+          [
+            0.55,
+            2.8,
+            -0.55
+          ],
+          [
+            0.9,
+            2.5,
+            -0.57
+          ],
+          [
+            1.3,
+            2.2,
+            -0.55
+          ],
+          [
+            1.7,
+            2.0,
+            -0.5
+          ]
         ]
       }
     },
@@ -143,19 +391,53 @@
       "name": "Scalene Anterior",
       "system": "musculoskeletal",
       "category": "Muscle",
-      "tag": "[Muscle]",
+      "tag": "Muscle",
       "description": "Deep lateral neck muscle running from the anterior tubercles of the transverse processes of C3-C6 to the scalene tubercle on the first rib. The phrenic nerve descends on its anterior surface.",
       "function": "Elevates the first rib during forced inspiration. Assists in lateral flexion of the cervical spine. Acts as an accessory muscle of respiration.",
       "clinical_relevance": "Scalene hypertrophy or spasm can compress the brachial plexus and subclavian vessels between the anterior and middle scalene muscles, causing neurogenic or vascular thoracic outlet syndrome.",
-      "key_concepts": ["first rib", "thoracic outlet syndrome", "brachial plexus", "subclavian artery", "C3-C6", "lateral flexion", "forced inspiration", "accessory respiratory muscle", "interscalene triangle"],
+      "key_concepts": [
+        "first rib",
+        "thoracic outlet syndrome",
+        "brachial plexus",
+        "subclavian artery",
+        "C3-C6",
+        "lateral flexion",
+        "forced inspiration",
+        "accessory respiratory muscle",
+        "interscalene triangle"
+      ],
       "coordinates": {
-        "camera_target": [0.50, 1.40, 0.22],
+        "camera_target": [
+          0.5,
+          1.4,
+          0.22
+        ],
         "points": [
-          [0.42, 2.00, 0.12],
-          [0.47, 1.70, 0.17],
-          [0.52, 1.40, 0.22],
-          [0.55, 1.10, 0.27],
-          [0.57, 0.80, 0.32]
+          [
+            0.42,
+            2.0,
+            0.12
+          ],
+          [
+            0.47,
+            1.7,
+            0.17
+          ],
+          [
+            0.52,
+            1.4,
+            0.22
+          ],
+          [
+            0.55,
+            1.1,
+            0.27
+          ],
+          [
+            0.57,
+            0.8,
+            0.32
+          ]
         ]
       }
     },
@@ -164,15 +446,33 @@
       "name": "Occipital Bone (Basilar Portion)",
       "system": "musculoskeletal",
       "category": "Bone",
-      "tag": "[Bone]",
+      "tag": "Bone",
       "description": "The posterior and inferior portion of the skull forming the skull base. Contains the foramen magnum through which the spinal cord exits the cranium. Articulates inferiorly with the atlas (C1) at the atlanto-occipital joint.",
       "function": "Protects the brainstem and cerebellum. Provides attachment sites for nuchal muscles and ligamentum nuchae. Forms the superior articulating surface of the atlanto-occipital joint for head flexion and extension.",
       "clinical_relevance": "Basilar skull fractures at the posterior fossa can damage cranial nerves IX-XII exiting through the jugular foramen and hypoglossal canal. Battle sign (mastoid ecchymosis) indicates basilar skull fracture.",
-      "key_concepts": ["foramen magnum", "brainstem", "atlanto-occipital joint", "nuchal line", "basilar skull fracture", "cranial nerve exit", "posterior fossa", "Battle sign", "cerebellum"],
+      "key_concepts": [
+        "foramen magnum",
+        "brainstem",
+        "atlanto-occipital joint",
+        "nuchal line",
+        "basilar skull fracture",
+        "cranial nerve exit",
+        "posterior fossa",
+        "Battle sign",
+        "cerebellum"
+      ],
       "coordinates": {
-        "camera_target": [0.00, 3.20, -0.30],
+        "camera_target": [
+          0.0,
+          3.2,
+          -0.3
+        ],
         "points": [
-          [0.00, 3.20, -0.30]
+          [
+            0.0,
+            3.2,
+            -0.3
+          ]
         ]
       }
     },
@@ -181,15 +481,34 @@
       "name": "C1 Vertebra (Atlas)",
       "system": "musculoskeletal",
       "category": "Vertebra",
-      "tag": "[Bone]",
+      "tag": "Bone",
       "description": "First cervical vertebra. Unique ring-shaped structure with no vertebral body and no spinous process. Has two lateral masses connected by anterior and posterior arches. Supports the skull via superior articular facets that articulate with the occipital condyles.",
       "function": "Permits flexion and extension at the atlanto-occipital joint (nodding 'yes'). Transmits the weight of the skull to the cervical spine. The vertebral arteries course through foramina in the transverse processes.",
       "clinical_relevance": "Jefferson fracture is a burst fracture of the C1 ring from axial loading (e.g., diving into shallow water). Often stable because the ring expands outward, but transverse ligament integrity must be assessed.",
-      "key_concepts": ["ring", "no body", "atlanto-occipital", "nodding", "Jefferson fracture", "axial loading", "lateral masses", "transverse ligament", "vertebral artery", "anterior arch"],
+      "key_concepts": [
+        "ring",
+        "no body",
+        "atlanto-occipital",
+        "nodding",
+        "Jefferson fracture",
+        "axial loading",
+        "lateral masses",
+        "transverse ligament",
+        "vertebral artery",
+        "anterior arch"
+      ],
       "coordinates": {
-        "camera_target": [0.00, 2.80, 0.00],
+        "camera_target": [
+          0.0,
+          2.8,
+          0.0
+        ],
         "points": [
-          [0.00, 2.80, 0.00]
+          [
+            0.0,
+            2.8,
+            0.0
+          ]
         ]
       }
     },
@@ -198,15 +517,34 @@
       "name": "C2 Vertebra (Axis)",
       "system": "musculoskeletal",
       "category": "Vertebra",
-      "tag": "[Bone]",
+      "tag": "Bone",
       "description": "Second cervical vertebra, distinguished by the odontoid process (dens) projecting superiorly from the vertebral body. The dens acts as a pivot around which the atlas rotates, held in place by the transverse ligament.",
       "function": "Permits rotation at the atlanto-axial joint (shaking head 'no'). The dens serves as the pivot point for approximately 50% of cervical rotation. The transverse ligament prevents anterior displacement of the dens into the spinal cord.",
       "clinical_relevance": "Odontoid (dens) fractures are common cervical spine injuries, especially in elderly falls. Type II fractures through the base of the dens have the highest nonunion rate. Hangman fracture involves bilateral C2 pars fracture.",
-      "key_concepts": ["dens", "odontoid process", "atlanto-axial", "rotation", "pivot", "Type II fracture", "hangman fracture", "transverse ligament", "cervical rotation", "spinal cord"],
+      "key_concepts": [
+        "dens",
+        "odontoid process",
+        "atlanto-axial",
+        "rotation",
+        "pivot",
+        "Type II fracture",
+        "hangman fracture",
+        "transverse ligament",
+        "cervical rotation",
+        "spinal cord"
+      ],
       "coordinates": {
-        "camera_target": [0.00, 2.40, 0.00],
+        "camera_target": [
+          0.0,
+          2.4,
+          0.0
+        ],
         "points": [
-          [0.00, 2.40, 0.00]
+          [
+            0.0,
+            2.4,
+            0.0
+          ]
         ]
       }
     },
@@ -215,19 +553,54 @@
       "name": "C3-C7 Vertebrae (Lower Cervical Spine)",
       "system": "musculoskeletal",
       "category": "Vertebra",
-      "tag": "[Bone]",
+      "tag": "Bone",
       "description": "The five lower cervical vertebrae forming the main body of the cervical spine. Feature typical vertebral bodies with uncinate processes, pedicles, laminae, and bifid spinous processes (C3-C6). C7 (vertebra prominens) has a long, non-bifid spinous process palpable at the base of the neck.",
       "function": "Support the weight of the head. Protect the cervical spinal cord. Permit flexion, extension, lateral bending, and rotation of the neck. Intervertebral foramina transmit cervical nerve roots.",
       "clinical_relevance": "Cervical disc herniation most commonly at C5-C6 and C6-C7 levels. Uncovertebral (Luschka) joint hypertrophy causes foraminal stenosis and radiculopathy. Cervical spondylotic myelopathy from canal narrowing is the most common cause of spinal cord dysfunction in adults over 55.",
-      "key_concepts": ["vertebral body", "spinal cord", "disc herniation", "radiculopathy", "facet joints", "uncovertebral joints", "vertebra prominens", "cervical lordosis", "nerve root", "foraminal stenosis"],
+      "key_concepts": [
+        "vertebral body",
+        "spinal cord",
+        "disc herniation",
+        "radiculopathy",
+        "facet joints",
+        "uncovertebral joints",
+        "vertebra prominens",
+        "cervical lordosis",
+        "nerve root",
+        "foraminal stenosis"
+      ],
       "coordinates": {
-        "camera_target": [0.00, 1.40, 0.06],
+        "camera_target": [
+          0.0,
+          1.4,
+          0.06
+        ],
         "points": [
-          [0.00, 2.00, 0.03],
-          [0.00, 1.70, 0.05],
-          [0.00, 1.40, 0.07],
-          [0.00, 1.10, 0.09],
-          [0.00, 0.80, 0.11]
+          [
+            0.0,
+            2.0,
+            0.03
+          ],
+          [
+            0.0,
+            1.7,
+            0.05
+          ],
+          [
+            0.0,
+            1.4,
+            0.07
+          ],
+          [
+            0.0,
+            1.1,
+            0.09
+          ],
+          [
+            0.0,
+            0.8,
+            0.11
+          ]
         ]
       }
     }

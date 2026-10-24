@@ -173,7 +173,8 @@
 
         // Populate card content
         titleEl.textContent = structure.name || 'Structure';
-        tagEl.textContent = structure.tag || ('[' + structure.category + ']');
+        var cleanTag = (structure.tag || structure.category || 'Structure').replace(/\[/g, '').replace(/\]/g, '');
+        tagEl.innerHTML = '<sup>' + escapeHtml(cleanTag) + '</sup>';
         tagEl.className = 'sticky-tag';
         if (structure.system === 'nervous') tagEl.classList.add('tag-nerve');
         else if (structure.category === 'Muscle') tagEl.classList.add('tag-muscle');
@@ -229,6 +230,7 @@
             if (text.length > 0) {
                 notesMap[currentStructure.id] = text;
                 saveToStorage();
+                if (window.NeuroAudit) NeuroAudit.showProactivePrompt();
             } else {
                 delete notesMap[currentStructure.id];
                 saveToStorage();
@@ -247,6 +249,7 @@
         if (text.length > 0) {
             notesMap[currentStructure.id] = text;
             saveToStorage();
+            if (window.NeuroAudit) NeuroAudit.showProactivePrompt();
         } else {
             delete notesMap[currentStructure.id];
             saveToStorage();
@@ -364,6 +367,7 @@
         if (structure.category === 'Muscle') tagClass = 'tag-muscle';
         else if (structure.system !== 'nervous') tagClass = 'tag-bone';
 
+        var cleanTag = (structure.tag || structure.category || '').replace(/\[/g, '').replace(/\]/g, '');
         var hasNote = (notesMap[id] && notesMap[id].trim().length > 0);
         var noteText = hasNote ? notesMap[id].trim() : '';
 
@@ -371,8 +375,8 @@
             '<div class="tree-node-main">' +
                 '<span class="tree-node-name">' + escapeHtml(structure.name) + '</span>' +
                 '<div class="tree-node-meta">' +
-                    '<span class="' + tagClass + '">' + escapeHtml(structure.tag) + '</span>' +
-                    (hasNote ? '<span class="tree-note-indicator">[Note]</span>' : '') +
+                    '<span class="' + tagClass + '"><sup>' + escapeHtml(cleanTag) + '</sup></span>' +
+                    (hasNote ? '<span class="tree-note-indicator"><sup>Note</sup></span>' : '') +
                     (hasNote ? '<button type="button" class="tree-note-delete" title="Delete note">×</button>' : '') +
                 '</div>' +
             '</div>';

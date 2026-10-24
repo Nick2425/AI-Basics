@@ -55,20 +55,22 @@
             </aside>
 
             <!-- Center: Anatomical Viewport -->
+            <!-- Center: Anatomical Viewport -->
             <section id="viewport-section">
                 <div id="viewport-container"></div>
                 <div id="viewcube-container" aria-label="Orientation ViewCube"></div>
+                <button type="button" id="recenter-cam-btn" class="viewport-recenter-btn" title="Recenter 3D camera to overview (shortcut: R)">Recenter View</button>
 
                 <!-- Floating Sticky Note Card -->
                 <div id="sticky-note-card" class="glass-card" style="display: none;">
                     <div class="sticky-header">
                         <div>
-                            <span id="sticky-tag" class="sticky-tag">[Nerve]</span>
+                            <span id="sticky-tag" class="sticky-tag"><sup>Nerve</sup></span>
                             <h3 id="sticky-title" class="sticky-title">Structure Name</h3>
                         </div>
                         <button type="button" id="sticky-close-btn" class="sticky-close" aria-label="Close note">×</button>
                     </div>
-                    <textarea id="sticky-textarea" class="sticky-textarea" placeholder="Write clinical study notes here..."></textarea>
+                    <textarea id="sticky-textarea" class="sticky-textarea" placeholder="Write study notes here in your own words..."></textarea>
                     <div class="sticky-footer">
                         <span class="sticky-hint">Blank drafts are discarded</span>
                         <div class="sticky-actions">
@@ -79,18 +81,77 @@
                 </div>
             </section>
 
-            <!-- Right Panel: Terminal Console -->
+            <!-- Right Panel: Conversational Study Companion & Audit -->
             <aside id="right-panel" class="panel">
-                <div class="panel-header">
-                    <span class="panel-title">Terminal</span>
+                <div class="panel-header panel-header-with-badge">
+                    <div class="chat-header-group">
+                        <span class="panel-title">Study Companion</span>
+                        <span class="chat-status-dot" title="Active"></span>
+                    </div>
+                    <button type="button" id="terminal-audit-btn" class="btn-primary btn-sm">Audit Notes</button>
                 </div>
                 <div class="panel-content" id="terminal-container">
-                    <div class="empty-state">
-                        <p class="terminal-placeholder">Terminal initializing...</p>
+                    <div id="terminal-log" class="chat-log" role="log" aria-live="polite">
+                        <div class="chat-msg tutor">
+                            <div class="chat-avatar">Tutor</div>
+                            <div class="chat-bubble">
+                                Hello! I'm your anatomy study assistant. As you explore the 3D model and take notes in the left panel, I'll help you spot gaps and test your clinical understanding.
+                            </div>
+                        </div>
+                        <div class="chat-msg tutor">
+                            <div class="chat-avatar">Tutor</div>
+                            <div class="chat-bubble">
+                                Click <strong>Audit Notes</strong> anytime to run a check, or ask me about any structure below!
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Proactive Audit Prompt Banner -->
+                    <div id="audit-proactive-banner" class="audit-proactive-banner" style="display: none;">
+                        <div class="proactive-text">Ready to check your notes for gaps?</div>
+                        <div class="proactive-actions">
+                            <button type="button" id="btn-accept-audit" class="btn-primary btn-xs">Check Now</button>
+                            <button type="button" id="btn-decline-audit" class="btn-secondary btn-xs">Later</button>
+                        </div>
+                    </div>
+
+                    <form id="chat-input-form" class="chat-input-row" onsubmit="return false;">
+                        <input type="text" id="terminal-input" class="chat-input" placeholder="Ask a question or type 'audit'..." autocomplete="off">
+                        <button type="submit" id="chat-send-btn" class="btn-chat-send" aria-label="Send message">Send</button>
+                    </form>
                 </div>
             </aside>
         </main>
+
+        <!-- What-If Clinical Challenge Modal Overlay -->
+        <div id="whatif-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-card glass-card">
+                <div class="modal-header">
+                    <div>
+                        <span class="modal-badge">Quick Anatomy Check</span>
+                        <h3 id="whatif-title" class="modal-title">Structure</h3>
+                    </div>
+                    <button type="button" id="whatif-close-btn" class="modal-close" aria-label="Close">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="gap-alert-box">
+                        <span class="gap-label">What we're looking at:</span>
+                        <p id="whatif-gap-desc" class="gap-desc"></p>
+                    </div>
+                    <div class="scenario-box">
+                        <span class="scenario-label">Study Question:</span>
+                        <p id="whatif-question" class="scenario-text"></p>
+                    </div>
+                    <label class="modal-input-label" for="whatif-answer">In your own words, what do you think happens?</label>
+                    <textarea id="whatif-answer" class="modal-textarea" placeholder="Type your thoughts here in everyday terms (e.g., raspy voice, trouble breathing, weak shoulder)..."></textarea>
+                    <div id="whatif-feedback" class="whatif-feedback" style="display: none;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="whatif-dismiss-btn" class="btn-secondary">Back to 3D View</button>
+                    <button type="button" id="whatif-submit-btn" class="btn-primary">Check Answer</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Three.js r128 via CDN (global build) -->
@@ -100,6 +161,7 @@
     <!-- Application Scripts -->
     <script src="/js/viewport.js"></script>
     <script src="/js/notes.js"></script>
+    <script src="/js/audit.js"></script>
     <script src="/js/app.js"></script>
 </body>
 </html>

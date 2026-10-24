@@ -680,6 +680,413 @@ body {
     color: #ef4444;
 }
 
+/* ==================== Button Variants ==================== */
+.btn-sm {
+    padding: 3px 9px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.btn-xs {
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* ==================== Superscript & Tag Typography ==================== */
+sup {
+    font-size: 80%;
+    vertical-align: super;
+    line-height: 0;
+    font-weight: 600;
+}
+
+.sticky-tag sup {
+    font-size: 9.5px;
+    letter-spacing: 0.3px;
+}
+
+.tree-node-meta sup {
+    font-size: 8.5px;
+    letter-spacing: 0.2px;
+}
+
+/* ==================== Viewport Recenter Button ==================== */
+.viewport-recenter-btn {
+    position: absolute;
+    top: 130px;
+    right: 18px;
+    background: rgba(18, 26, 43, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-sm);
+    user-select: none;
+}
+
+.viewport-recenter-btn:hover {
+    background: rgba(30, 41, 59, 0.95);
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.viewport-recenter-btn:active {
+    transform: translateY(0);
+}
+
+/* ==================== Conversational Chat Companion ==================== */
+.chat-header-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chat-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 6px rgba(52, 211, 153, 0.8);
+    display: inline-block;
+}
+
+#terminal-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+    background: rgba(10, 15, 24, 0.3);
+}
+
+.chat-log {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 2px;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.chat-msg {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-width: 92%;
+    animation: fadeIn 0.16s ease-out;
+}
+
+.chat-msg.tutor {
+    align-self: flex-start;
+}
+
+.chat-msg.user {
+    align-self: flex-end;
+}
+
+.chat-avatar {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 4px;
+}
+
+.chat-msg.user .chat-avatar {
+    margin-left: 0;
+    margin-right: 4px;
+    align-self: flex-end;
+    color: var(--text-muted);
+}
+
+.chat-bubble {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 10px 10px 10px 2px;
+    padding: 8px 11px;
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+    word-break: break-word;
+}
+
+.chat-msg.user .chat-bubble {
+    background: var(--accent-dim);
+    border-color: rgba(56, 189, 248, 0.35);
+    border-radius: 10px 10px 2px 10px;
+    color: var(--text-primary);
+}
+
+.chat-bubble.gap-card {
+    background: rgba(245, 158, 11, 0.09);
+    border-color: rgba(245, 158, 11, 0.35);
+    border-left: 3px solid var(--audit-alert);
+    border-radius: 4px 10px 10px 4px;
+}
+
+.chat-bubble.gap-card .gap-title {
+    font-weight: 600;
+    color: var(--audit-alert);
+    margin-bottom: 3px;
+    display: block;
+}
+
+.chat-bubble.feedback-correct {
+    background: rgba(52, 211, 153, 0.1);
+    border-color: rgba(52, 211, 153, 0.35);
+    border-left: 3px solid #34d399;
+    border-radius: 4px 10px 10px 4px;
+}
+
+.chat-bubble.feedback-partial {
+    background: rgba(56, 189, 248, 0.08);
+    border-color: rgba(56, 189, 248, 0.35);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px 10px 10px 4px;
+}
+
+.chat-bubble-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+/* ==================== Proactive Audit Banner ==================== */
+.audit-proactive-banner {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 6px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.proactive-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--audit-alert);
+}
+
+.proactive-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* ==================== Conversational Chat Input ==================== */
+.chat-input-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(18, 26, 43, 0.85);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 4px 6px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s ease;
+}
+
+.chat-input-row:focus-within {
+    border-color: var(--accent);
+}
+
+.chat-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    padding: 4px 6px;
+}
+
+.btn-chat-send {
+    background: var(--accent);
+    border: none;
+    color: #04101e;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.btn-chat-send:hover {
+    opacity: 0.9;
+}
+
+/* ==================== What-If Modal Overlay ==================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.18s ease-out;
+}
+
+.modal-card {
+    width: 520px;
+    max-width: 90vw;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.modal-badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--audit-alert);
+}
+
+.modal-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 2px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: var(--text-primary);
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gap-alert-box {
+    background: rgba(245, 158, 11, 0.08);
+    border-left: 3px solid var(--audit-alert);
+    padding: 8px 12px;
+    border-radius: 0 5px 5px 0;
+}
+
+.gap-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--audit-alert);
+}
+
+.gap-desc {
+    font-size: 12px;
+    color: var(--text-primary);
+    margin-top: 3px;
+    line-height: 1.45;
+}
+
+.scenario-box {
+    background: rgba(56, 189, 248, 0.06);
+    border-left: 3px solid var(--accent);
+    padding: 8px 12px;
+    border-radius: 0 5px 5px 0;
+}
+
+.scenario-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--accent);
+}
+
+.scenario-text {
+    font-size: 12px;
+    color: var(--text-primary);
+    margin-top: 3px;
+    line-height: 1.45;
+}
+
+.modal-input-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.modal-textarea {
+    width: 100%;
+    min-height: 85px;
+    background: rgba(10, 15, 24, 0.7);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--text-primary);
+    resize: vertical;
+    outline: none;
+    line-height: 1.5;
+}
+
+.modal-textarea:focus {
+    border-color: var(--accent);
+}
+
+.whatif-feedback {
+    background: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #34d399;
+    line-height: 1.45;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 4px;
+}
+
 /* ==================== Scrollbar ==================== */
 ::-webkit-scrollbar {
     width: 5px;
