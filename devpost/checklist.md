@@ -49,7 +49,7 @@ Build mode: learn
   Learner check: Write a quick note on one structure, accept the audit prompt, and watch the camera fly to the gap. Answer the what-if question. Check that your note got updated. This is the core loop — does it feel like the study tool you described?
   Commit: `Add knowledge-gap audit engine, camera glide, and what-if challenge`
 
-- [ ] **5. Terminal console and theme switcher**
+- [x] **5. Terminal console and theme switcher**
   Becomes usable: The right-panel terminal supports typed commands (`audit`, `inspect <part>`, `layer <nervous|musculo>`, `theme <dark|light|pink>`, `help`). The theme switcher in the header toggles between Surgical Dark, Clean Light, and Off-Pink palettes across the entire UI and 3D scene.
   Why now: The terminal and themes complete the full interaction surface described in the PRD. All prior behavior works through clicks; the terminal adds the keyboard-driven workflow and ties everything together.
   PRD ref: `prd.md > Features > 5. Modern Terminal & Query Console`, `prd.md > Screens and Layout > Global Header / Theme Switcher`
