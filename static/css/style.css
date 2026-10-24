@@ -122,6 +122,7 @@ body {
 
 /* ==================== Header ==================== */
 #header {
+    position: relative;
     height: var(--header-height);
     min-height: var(--header-height);
     background: var(--header-bg);
@@ -143,12 +144,14 @@ body {
 
 /* ==================== Center: Professor Snoop Treat Progress Bar ==================== */
 .header-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 1;
-    max-width: 440px;
-    margin: 0 16px;
+    pointer-events: auto;
 }
 
 .treat-meter-card {
