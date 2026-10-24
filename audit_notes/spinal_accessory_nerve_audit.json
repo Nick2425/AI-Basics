@@ -3,9 +3,9 @@
   "structure_name": "Cranial Nerve XI (Spinal Accessory Nerve)",
   "category": "Cranial Nerve",
   "tag": "Nerve",
-  "timestamp": "2026-10-24T20:39:23.181628+00:00",
+  "timestamp": "2026-10-24T20:48:39.322818+00:00",
   "question": "A patient suffers penetrating trauma to the superior posterior triangle of the neck. When instructed to shrug against resistance or turn the chin to the opposite side, what specific muscular weaknesses are observed?",
-  "student_answer": "Trapezius muscle weakness",
+  "student_answer": "Weakness in the trapezius muscle is observed.",
   "is_correct": true,
   "companion_feedback": "Assessment confirmed. Accurate clinical correlation identified: trapezius.",
   "key_takeaway": "Clinical Correlation: Vulnerable during posterior triangle lymph node biopsy. Damage causes shoulder drop, scapular winging, and weakness in head turning."

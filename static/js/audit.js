@@ -448,11 +448,11 @@
         var saved = localStorage.getItem(TREAT_STORAGE_KEY);
         if (saved !== null) {
             treatCount = parseInt(saved, 10);
-            if (isNaN(treatCount) || treatCount < 10) treatCount = 10;
+            if (isNaN(treatCount)) treatCount = 10;
         } else {
             treatCount = 10;
         }
-        if (treatCount > TOTAL_TREATS) treatCount = TOTAL_TREATS;
+        if (treatCount >= TOTAL_TREATS) treatCount = 0;
 
         renderTreatSlots();
     }
@@ -566,11 +566,26 @@
                 }, 1800);
             }
 
-            // Confetti explosion when treats reach 11
+            // Confetti explosion when treats reach 11, then reset counter to 0
             if (treatCount >= TOTAL_TREATS) {
                 setTimeout(function () {
                     launchConfettiExplosion();
                 }, 200);
+
+                setTimeout(function () {
+                    treatCount = 0;
+                    localStorage.setItem(TREAT_STORAGE_KEY, '0');
+                    renderTreatSlots();
+                    if (treatChompBubbleEl) {
+                        treatChompBubbleEl.textContent = 'Reset to 0!';
+                        treatChompBubbleEl.classList.remove('visible');
+                        void treatChompBubbleEl.offsetWidth;
+                        treatChompBubbleEl.classList.add('visible');
+                        setTimeout(function () {
+                            treatChompBubbleEl.classList.remove('visible');
+                        }, 1200);
+                    }
+                }, 2800);
             }
         }, 850);
     }
@@ -679,6 +694,12 @@
         render();
     }
 
+    function resetTreats() {
+        treatCount = 0;
+        localStorage.setItem(TREAT_STORAGE_KEY, '0');
+        renderTreatSlots();
+    }
+
     /* ================================================================
        Public API
        ================================================================ */
@@ -690,6 +711,7 @@
         logToTerminal:        logToTerminal,
         logToChat:            logToChat,
         feedTreat:            feedProfessorSnoopTreat,
-        launchConfetti:       launchConfettiExplosion
+        launchConfetti:       launchConfettiExplosion,
+        resetTreats:          resetTreats
     };
 })();
