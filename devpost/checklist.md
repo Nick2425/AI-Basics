@@ -96,4 +96,5 @@ Activity mode: live app and editor with interactive mechanical verification.
 - Integrated 3D viewport actions into conversational AI responses: automatically isolating discussed anatomy and providing interactive quick-action buttons directly within chat bubbles.
 - Personalized application identity: renamed application to SnoopAnatomy and AI companion to Professor Snoop.
 - Added animated Professor Snoop mascot figure to the clinical audit challenge modal, pointing directly to audit scenario boxes during questions and changing to a proud, celebrating expression upon assessment submission.
+- Added bone treat progress bar in the top navigation bar with dynamic feeding animation: correct clinical audits launch an animated bone treat to Professor Snoop, triggering munching animations, celebratory speech bubbles, and bone track progress.
 

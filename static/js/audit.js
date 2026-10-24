@@ -50,6 +50,7 @@
         submitBtn          = document.getElementById('whatif-submit-btn');
 
         setupEventListeners();
+        initTreatBar();
     }
 
     /* ================================================================
@@ -369,6 +370,11 @@
                 : '<strong>Good clinical analysis!</strong> Takeaway recorded in your audit notes.';
         }
 
+        // Visibly feed a treat to Professor Snoop if correct
+        if (isCorrect) {
+            feedProfessorSnoopTreat();
+        }
+
         // 1. Save full audit record to separate folder in NeuroNotes
         if (window.NeuroNotes && resData.audit_record) {
             NeuroNotes.saveAuditRecord(resData.audit_record);
@@ -426,6 +432,139 @@
     }
 
     /* ================================================================
+       Professor Snoop Treat Progress Bar System
+       ================================================================ */
+    var TOTAL_TREATS = 11;
+    var TREAT_STORAGE_KEY = 'snoopanatomy_treats_v1';
+    var treatCount = 0;
+    var treatTrackEl, treatCountEl, treatSnoopAvatarEl, treatChompBubbleEl;
+
+    function initTreatBar() {
+        treatTrackEl       = document.getElementById('treat-track');
+        treatCountEl       = document.getElementById('treat-count');
+        treatSnoopAvatarEl = document.getElementById('treat-snoop-avatar');
+        treatChompBubbleEl = document.getElementById('treat-chomp-bubble');
+
+        var saved = localStorage.getItem(TREAT_STORAGE_KEY);
+        if (saved !== null) {
+            treatCount = parseInt(saved, 10) || 0;
+        } else {
+            treatCount = 0;
+        }
+        if (treatCount > TOTAL_TREATS) treatCount = TOTAL_TREATS;
+
+        renderTreatSlots();
+    }
+
+    function renderTreatSlots() {
+        if (!treatTrackEl) return;
+        treatTrackEl.innerHTML = '';
+
+        for (var i = 0; i < TOTAL_TREATS; i++) {
+            var slot = document.createElement('div');
+            slot.className = 'treat-slot' + (i < treatCount ? ' filled' : '');
+            slot.title = 'Bone Treat ' + (i + 1) + ' of ' + TOTAL_TREATS;
+            slot.innerHTML = getTreatBoneSvg(16, 10);
+            treatTrackEl.appendChild(slot);
+        }
+
+        if (treatCountEl) {
+            treatCountEl.textContent = String(treatCount);
+        }
+    }
+
+    function getTreatBoneSvg(w, h) {
+        w = w || 16;
+        h = h || 10;
+        return '<svg class="treat-bone-icon" viewBox="0 0 24 14" width="' + w + '" height="' + h + '">' +
+            '<circle cx="4.5" cy="4" r="3.2" fill="currentColor"/>' +
+            '<circle cx="4.5" cy="10" r="3.2" fill="currentColor"/>' +
+            '<circle cx="19.5" cy="4" r="3.2" fill="currentColor"/>' +
+            '<circle cx="19.5" cy="10" r="3.2" fill="currentColor"/>' +
+            '<rect x="4" y="4.5" width="16" height="5" rx="1.5" fill="currentColor"/>' +
+            '</svg>';
+    }
+
+    function feedProfessorSnoopTreat() {
+        var willIncrement = treatCount < TOTAL_TREATS;
+        if (willIncrement) {
+            treatCount++;
+            localStorage.setItem(TREAT_STORAGE_KEY, String(treatCount));
+        }
+
+        // 1. Source coordinates (from modal submit button or center)
+        var sourceX = window.innerWidth / 2;
+        var sourceY = window.innerHeight / 2 + 80;
+        if (submitBtn) {
+            var rect = submitBtn.getBoundingClientRect();
+            sourceX = rect.left + rect.width / 2;
+            sourceY = rect.top + rect.height / 2;
+        }
+
+        // 2. Destination coordinates (Professor Snoop avatar in header)
+        var destX = window.innerWidth / 2;
+        var destY = 24;
+        if (treatSnoopAvatarEl) {
+            var destRect = treatSnoopAvatarEl.getBoundingClientRect();
+            destX = destRect.left + destRect.width / 2;
+            destY = destRect.top + destRect.height / 2;
+        }
+
+        // 3. Create flying bone treat
+        var flyer = document.createElement('div');
+        flyer.className = 'flying-treat-bone';
+        flyer.innerHTML = getTreatBoneSvg(24, 15);
+        flyer.style.left = (sourceX - 12) + 'px';
+        flyer.style.top = (sourceY - 7) + 'px';
+        document.body.appendChild(flyer);
+
+        // Animate flying upwards to Professor Snoop
+        requestAnimationFrame(function () {
+            flyer.style.transform = 'translate(' + (destX - sourceX) + 'px, ' + (destY - sourceY) + 'px) scale(1.2) rotate(360deg)';
+        });
+
+        // 4. On arrival at Professor Snoop
+        setTimeout(function () {
+            if (flyer.parentNode) {
+                flyer.parentNode.removeChild(flyer);
+            }
+
+            // Update counter and illuminate new slot
+            if (treatCountEl) {
+                treatCountEl.textContent = String(treatCount);
+            }
+
+            if (treatTrackEl) {
+                var slots = treatTrackEl.querySelectorAll('.treat-slot');
+                if (slots && slots[treatCount - 1]) {
+                    slots[treatCount - 1].classList.add('filled', 'just-earned');
+                }
+            }
+
+            // Professor Snoop munching animation
+            if (treatSnoopAvatarEl) {
+                treatSnoopAvatarEl.classList.remove('eating');
+                void treatSnoopAvatarEl.offsetWidth;
+                treatSnoopAvatarEl.classList.add('eating');
+            }
+
+            // Happy chomp speech bubble
+            if (treatChompBubbleEl) {
+                var chompQuotes = ['Yum!', 'Crunch!', 'Delicious!', 'Good boy!', 'Tasty!'];
+                var randomQuote = chompQuotes[Math.floor(Math.random() * chompQuotes.length)];
+                treatChompBubbleEl.textContent = randomQuote;
+                treatChompBubbleEl.classList.remove('visible');
+                void treatChompBubbleEl.offsetWidth;
+                treatChompBubbleEl.classList.add('visible');
+
+                setTimeout(function () {
+                    treatChompBubbleEl.classList.remove('visible');
+                }, 1300);
+            }
+        }, 850);
+    }
+
+    /* ================================================================
        Public API
        ================================================================ */
     window.NeuroAudit = {
@@ -434,6 +573,7 @@
         showProactivePrompt:  showProactivePrompt,
         hideProactivePrompt:  hideProactiveBanner,
         logToTerminal:        logToTerminal,
-        logToChat:            logToChat
+        logToChat:            logToChat,
+        feedTreat:            feedProfessorSnoopTreat
     };
 })();
