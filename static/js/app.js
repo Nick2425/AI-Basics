@@ -13,11 +13,33 @@
     document.addEventListener('DOMContentLoaded', function () {
 
         /* ==============================================================
-           Initialize the 3D viewport
+           Initialize the 3D viewport & synchronized ViewCube
            ============================================================== */
         var viewportContainer = document.getElementById('viewport-container');
+        var viewCubeContainer = document.getElementById('viewcube-container');
         if (viewportContainer && window.NeuroViewport) {
-            NeuroViewport.init(viewportContainer);
+            NeuroViewport.init(viewportContainer, viewCubeContainer);
+        }
+
+        /* ==============================================================
+           Layer visibility toggles (View > Layers)
+           ============================================================== */
+        var layerNervous = document.getElementById('layer-nervous');
+        if (layerNervous) {
+            layerNervous.addEventListener('change', function () {
+                if (window.NeuroViewport) {
+                    NeuroViewport.setLayerVisible('nervous', this.checked);
+                }
+            });
+        }
+
+        var layerMusculo = document.getElementById('layer-musculoskeletal');
+        if (layerMusculo) {
+            layerMusculo.addEventListener('change', function () {
+                if (window.NeuroViewport) {
+                    NeuroViewport.setLayerVisible('musculoskeletal', this.checked);
+                }
+            });
         }
 
         /* ==============================================================

@@ -330,6 +330,31 @@ body {
     outline: none;
 }
 
+/* ==================== Autodesk ViewCube ==================== */
+#viewcube-container {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 110px;
+    height: 110px;
+    z-index: 20;
+    pointer-events: auto;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#viewcube-container:active {
+    cursor: grabbing;
+}
+
+#viewcube-container canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    outline: none;
+}
+
 /* ==================== Glassmorphism Utility ==================== */
 .glass-card {
     background: var(--panel-bg-translucent);

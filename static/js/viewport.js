@@ -38,7 +38,7 @@
     /* ================================================================
        init — called once from app.js
        ================================================================ */
-    function init(containerEl) {
+    function init(containerEl, viewCubeContainerEl) {
         container = containerEl;
 
         // ---- Scene ----
@@ -91,6 +91,9 @@
 
         // ---- Resize handler ----
         window.addEventListener('resize', onResize);
+
+        // ---- ViewCube (Autodesk Inventor style) ----
+        initViewCube(viewCubeContainerEl);
 
         // ---- Render loop ----
         animate();
@@ -396,12 +399,217 @@
     }
 
     /* ================================================================
+       Autodesk Inventor-Style ViewCube & Synchronization
+       ================================================================ */
+    var viewCubeScene, viewCubeCamera, viewCubeRenderer, viewCubeMesh;
+    var viewCubeContainer = null;
+    var isCameraTweening = false;
+
+    function initViewCube(vcContainer) {
+        viewCubeContainer = vcContainer || document.getElementById('viewcube-container');
+        if (!viewCubeContainer) return;
+
+        var size = 110;
+        viewCubeScene = new THREE.Scene();
+
+        viewCubeCamera = new THREE.PerspectiveCamera(50, 1, 0.1, 50);
+        viewCubeCamera.position.set(0, 0, 3.0);
+
+        viewCubeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        viewCubeRenderer.setSize(size, size);
+        viewCubeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        viewCubeRenderer.outputEncoding = THREE.sRGBEncoding;
+        viewCubeContainer.appendChild(viewCubeRenderer.domElement);
+
+        viewCubeScene.add(new THREE.AmbientLight(0xffffff, 0.9));
+        var dirLight = new THREE.DirectionalLight(0xffffff, 0.55);
+        dirLight.position.set(3, 4, 5);
+        viewCubeScene.add(dirLight);
+
+        // Three.js BoxGeometry face order:
+        // [0: +X (RIGHT), 1: -X (LEFT), 2: +Y (TOP), 3: -Y (BOTTOM), 4: +Z (FRONT), 5: -Z (BACK)]
+        var faceConfigs = [
+            { text: 'RIGHT',  normal: new THREE.Vector3(1, 0, 0) },
+            { text: 'LEFT',   normal: new THREE.Vector3(-1, 0, 0) },
+            { text: 'TOP',    normal: new THREE.Vector3(0, 1, 0) },
+            { text: 'BOTTOM', normal: new THREE.Vector3(0, -1, 0) },
+            { text: 'FRONT',  normal: new THREE.Vector3(0, 0, 1) },
+            { text: 'BACK',   normal: new THREE.Vector3(0, 0, -1) }
+        ];
+
+        var materials = faceConfigs.map(function (cfg) {
+            var canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+            var ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, 0, 128, 128);
+
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 6;
+            ctx.strokeRect(3, 3, 122, 122);
+
+            ctx.fillStyle = '#f8fafc';
+            ctx.font = 'bold 22px Outfit, Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(cfg.text, 64, 64);
+
+            var texture = new THREE.CanvasTexture(canvas);
+            return new THREE.MeshPhongMaterial({
+                map: texture,
+                shininess: 30
+            });
+        });
+
+        var geom = new THREE.BoxGeometry(1.4, 1.4, 1.4);
+        viewCubeMesh = new THREE.Mesh(geom, materials);
+        viewCubeScene.add(viewCubeMesh);
+
+        var edges = new THREE.EdgesGeometry(geom);
+        var edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x94a3b8 }));
+        viewCubeMesh.add(edgeLines);
+
+        setupViewCubeEvents(viewCubeContainer, faceConfigs);
+    }
+
+    function setupViewCubeEvents(el, faceConfigs) {
+        var isDown = false;
+        var startX = 0, startY = 0;
+        var lastX = 0, lastY = 0;
+        var hasDragged = false;
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+
+        el.addEventListener('pointerdown', function (e) {
+            isDown = true;
+            hasDragged = false;
+            startX = e.clientX;
+            startY = e.clientY;
+            lastX = e.clientX;
+            lastY = e.clientY;
+            try { el.setPointerCapture(e.pointerId); } catch (_) {}
+        });
+
+        el.addEventListener('pointermove', function (e) {
+            if (!isDown) return;
+            var dx = e.clientX - lastX;
+            var dy = e.clientY - lastY;
+            if (Math.abs(e.clientX - startX) > 4 || Math.abs(e.clientY - startY) > 4) {
+                hasDragged = true;
+            }
+            lastX = e.clientX;
+            lastY = e.clientY;
+
+            if (hasDragged && camera && controls) {
+                var target = controls.target;
+                var offset = new THREE.Vector3().copy(camera.position).sub(target);
+                var spherical = new THREE.Spherical().setFromVector3(offset);
+                spherical.theta -= dx * 0.012;
+                spherical.phi -= dy * 0.012;
+                spherical.phi = Math.max(0.04, Math.min(Math.PI - 0.04, spherical.phi));
+                offset.setFromSpherical(spherical);
+                camera.position.copy(target).add(offset);
+                camera.lookAt(target);
+                controls.update();
+            }
+        });
+
+        el.addEventListener('pointerup', function (e) {
+            if (!isDown) return;
+            isDown = false;
+            try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+
+            if (!hasDragged && viewCubeMesh && viewCubeCamera) {
+                var rect = el.getBoundingClientRect();
+                mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+                raycaster.setFromCamera(mouse, viewCubeCamera);
+                var intersects = raycaster.intersectObject(viewCubeMesh);
+                if (intersects.length > 0) {
+                    var faceIdx = Math.floor(intersects[0].faceIndex / 2);
+                    if (faceConfigs[faceIdx]) {
+                        snapToNormal(faceConfigs[faceIdx].normal);
+                    }
+                }
+            }
+        });
+    }
+
+    function snapToNormal(normal) {
+        if (!camera || !controls || isCameraTweening) return;
+
+        var target = controls.target;
+        var currentDist = camera.position.distanceTo(target);
+        var dist = Math.max(2.5, Math.min(10, currentDist));
+
+        var targetPos = new THREE.Vector3();
+        if (Math.abs(normal.y) > 0.9) {
+            targetPos.set(target.x + 0.0001, target.y + normal.y * dist, target.z + 0.0001);
+        } else {
+            targetPos.set(target.x + normal.x * dist, target.y + normal.y * dist, target.z + normal.z * dist);
+        }
+
+        tweenCameraTo(targetPos, target, 380);
+    }
+
+    function tweenCameraTo(targetPos, lookAtPos, durationMs) {
+        isCameraTweening = true;
+        var startPos = camera.position.clone();
+        var startTime = performance.now();
+
+        function step(now) {
+            var elapsed = now - startTime;
+            var t = Math.min(1, elapsed / durationMs);
+            var ease = 1 - Math.pow(1 - t, 3);
+
+            camera.position.lerpVectors(startPos, targetPos, ease);
+            camera.lookAt(lookAtPos);
+            controls.target.copy(lookAtPos);
+            controls.update();
+
+            if (t < 1) {
+                requestAnimationFrame(step);
+            } else {
+                camera.position.copy(targetPos);
+                controls.update();
+                isCameraTweening = false;
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+    function snapCameraTo(direction) {
+        var normalMap = {
+            front:  new THREE.Vector3(0, 0, 1),
+            back:   new THREE.Vector3(0, 0, -1),
+            right:  new THREE.Vector3(1, 0, 0),
+            left:   new THREE.Vector3(-1, 0, 0),
+            top:    new THREE.Vector3(0, 1, 0),
+            bottom: new THREE.Vector3(0, -1, 0)
+        };
+        var normal = normalMap[direction.toLowerCase()];
+        if (normal) snapToNormal(normal);
+    }
+
+    /* ================================================================
        Animation Loop
        ================================================================ */
     function animate() {
         requestAnimationFrame(animate);
         controls.update();
         renderer.render(scene, camera);
+
+        // Synchronize ViewCube
+        if (viewCubeCamera && controls && camera && viewCubeRenderer && viewCubeScene) {
+            var dir = new THREE.Vector3().copy(camera.position).sub(controls.target).normalize();
+            viewCubeCamera.position.copy(dir.multiplyScalar(3.0));
+            viewCubeCamera.lookAt(0, 0, 0);
+            viewCubeCamera.up.copy(camera.up);
+            viewCubeRenderer.render(viewCubeScene, viewCubeCamera);
+        }
     }
 
     /* ================================================================
@@ -422,16 +630,20 @@
     window.NeuroViewport = {
         init: init,
 
-        getScene:     function () { return scene; },
-        getCamera:    function () { return camera; },
-        getRenderer:  function () { return renderer; },
-        getControls:  function () { return controls; },
+        getScene:        function () { return scene; },
+        getCamera:       function () { return camera; },
+        getRenderer:     function () { return renderer; },
+        getControls:     function () { return controls; },
+        getViewCube:     function () { return viewCubeMesh; },
 
         /** All primary structure meshes (excludes mirrors) */
-        getAllMeshes:  function () { return allStructureMeshes; },
+        getAllMeshes:    function () { return allStructureMeshes; },
 
         /** Raw anatomy data array */
-        getAnatomyData: function () { return anatomyData; },
+        getAnatomyData:  function () { return anatomyData; },
+
+        /** Snap main camera to orthogonal direction (front, back, right, left, top, bottom) */
+        snapCameraTo:    snapCameraTo,
 
         /** Toggle layer visibility */
         setLayerVisible: function (system, visible) {

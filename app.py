@@ -13,6 +13,14 @@ import os
 
 app = FastAPI(title="NeuroSoma", version="0.1.0")
 
+
+@app.middleware("http")
+async def no_cache_static(request, call_next):
+    """Force the browser to revalidate files so code edits appear on refresh."""
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-cache, must-revalidate"
+    return response
+
 # ---------------------------------------------------------------------------
 # Data loading
 # ---------------------------------------------------------------------------
