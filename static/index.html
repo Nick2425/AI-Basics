@@ -81,6 +81,43 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Floating Clinical Audit Detail Card -->
+                <div id="audit-detail-card" class="glass-card audit-record-card" style="display: none;">
+                    <div class="sticky-header">
+                        <div>
+                            <span id="audit-detail-tag" class="sticky-tag"><sup>Nerve</sup></span>
+                            <span class="audit-badge-pill">Audit Record</span>
+                            <h3 id="audit-detail-title" class="sticky-title">Structure Name</h3>
+                        </div>
+                        <button type="button" id="audit-detail-close-btn" class="sticky-close" aria-label="Close audit record">×</button>
+                    </div>
+                    <div class="audit-card-body">
+                        <div class="audit-card-section">
+                            <span class="audit-card-label">Scenario Question:</span>
+                            <p id="audit-detail-question" class="audit-card-text"></p>
+                        </div>
+                        <div class="audit-card-section">
+                            <span class="audit-card-label">Your Assessment:</span>
+                            <p id="audit-detail-answer" class="audit-card-text user-text"></p>
+                        </div>
+                        <div class="audit-card-section feedback-section">
+                            <span class="audit-card-label">Companion Feedback:</span>
+                            <p id="audit-detail-feedback" class="audit-card-feedback"></p>
+                        </div>
+                        <div class="audit-card-section takeaway-section">
+                            <span class="audit-card-label">Verified Takeaway:</span>
+                            <p id="audit-detail-takeaway" class="audit-card-takeaway"></p>
+                        </div>
+                    </div>
+                    <div class="sticky-footer">
+                        <span id="audit-detail-meta" class="sticky-hint">Saved in audit_notes/</span>
+                        <div class="sticky-actions">
+                            <button type="button" id="audit-detail-delete-btn" class="btn-secondary">Delete</button>
+                            <button type="button" id="audit-detail-dismiss-btn" class="btn-primary">Close</button>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- Right Panel: Conversational Study Companion & Audit -->

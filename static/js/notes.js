@@ -20,14 +20,20 @@
 
     // State
     var notesMap = {}; // { [structureId]: string }
+    var auditNotesMap = {}; // { [structureId]: auditRecord }
     var currentStructure = null;
+    var currentAuditRecord = null;
     var currentAnchor3D = null;
     var cachedStructures = null;
     var collapsedFolders = {}; // { [folderId]: boolean }
 
-    // DOM Elements
+    // DOM Elements - Sticky Notes
     var cardEl, titleEl, tagEl, textareaEl, closeBtn, deleteBtn, saveBtn;
     var treeEl, countBadgeEl;
+
+    // DOM Elements - Audit Record Card
+    var auditCardEl, auditTitleEl, auditTagEl, auditQuestionEl, auditAnswerEl;
+    var auditFeedbackEl, auditTakeawayEl, auditMetaEl, auditCloseBtn, auditDismissBtn, auditDeleteBtn;
 
     /* ================================================================
        Initialization
@@ -43,12 +49,26 @@
         treeEl       = document.getElementById('notes-tree');
         countBadgeEl = document.getElementById('notes-count-badge');
 
+        auditCardEl     = document.getElementById('audit-detail-card');
+        auditTitleEl    = document.getElementById('audit-detail-title');
+        auditTagEl      = document.getElementById('audit-detail-tag');
+        auditQuestionEl = document.getElementById('audit-detail-question');
+        auditAnswerEl   = document.getElementById('audit-detail-answer');
+        auditFeedbackEl = document.getElementById('audit-detail-feedback');
+        auditTakeawayEl = document.getElementById('audit-detail-takeaway');
+        auditMetaEl     = document.getElementById('audit-detail-meta');
+        auditCloseBtn   = document.getElementById('audit-detail-close-btn');
+        auditDismissBtn = document.getElementById('audit-detail-dismiss-btn');
+        auditDeleteBtn  = document.getElementById('audit-detail-delete-btn');
+
         loadNotes();
         setupEventListeners();
 
-        // Load structure hierarchy
+        // Load structure hierarchy and audit notes from server
         ensureStructures(function () {
-            renderTree();
+            loadAuditNotes(function () {
+                renderTree();
+            });
         });
 
         // Connect to Viewport selection events
@@ -161,6 +181,36 @@
                 e.stopPropagation();
             });
         }
+
+        // Audit detail card event listeners
+        if (auditCloseBtn) {
+            auditCloseBtn.addEventListener('click', function () {
+                closeAuditRecord();
+            });
+        }
+
+        if (auditDismissBtn) {
+            auditDismissBtn.addEventListener('click', function () {
+                closeAuditRecord();
+            });
+        }
+
+        if (auditDeleteBtn) {
+            auditDeleteBtn.addEventListener('click', function () {
+                if (currentAuditRecord && currentAuditRecord.structure_id) {
+                    deleteAuditRecord(currentAuditRecord.structure_id);
+                }
+            });
+        }
+
+        if (auditCardEl) {
+            auditCardEl.addEventListener('pointerdown', function (e) {
+                e.stopPropagation();
+            });
+            auditCardEl.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+        }
     }
 
     /* ================================================================
@@ -267,6 +317,109 @@
     }
 
     /* ================================================================
+       Audit Notes API & Record Management
+       ================================================================ */
+    function loadAuditNotes(callback) {
+        fetch('/api/audit-notes')
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                auditNotesMap = {};
+                if (data && data.audit_notes && Array.isArray(data.audit_notes)) {
+                    data.audit_notes.forEach(function (rec) {
+                        if (rec && rec.structure_id) {
+                            auditNotesMap[rec.structure_id] = rec;
+                        }
+                    });
+                }
+                renderTree();
+                if (callback) callback(auditNotesMap);
+            })
+            .catch(function (err) {
+                console.error('[NeuroNotes] Error fetching audit notes:', err);
+                if (callback) callback({});
+            });
+    }
+
+    function saveAuditRecord(record) {
+        if (!record || !record.structure_id) return;
+        auditNotesMap[record.structure_id] = record;
+        renderTree();
+    }
+
+    function deleteAuditRecord(structureId) {
+        fetch('/api/audit-notes/' + encodeURIComponent(structureId), {
+            method: 'DELETE'
+        })
+        .then(function (res) { return res.json(); })
+        .then(function () {
+            delete auditNotesMap[structureId];
+            if (currentAuditRecord && currentAuditRecord.structure_id === structureId) {
+                closeAuditRecord();
+            }
+            renderTree();
+        })
+        .catch(function (err) {
+            console.error('[NeuroNotes] Error deleting audit note:', err);
+            delete auditNotesMap[structureId];
+            if (currentAuditRecord && currentAuditRecord.structure_id === structureId) {
+                closeAuditRecord();
+            }
+            renderTree();
+        });
+    }
+
+    function openAuditRecord(rec) {
+        if (!auditCardEl || !rec) return;
+        currentAuditRecord = rec;
+
+        // Auto-close sticky note if open
+        closeNote(false);
+
+        auditTitleEl.textContent = rec.structure_name || 'Audited Structure';
+        var cleanTag = (rec.tag || rec.category || 'Structure').replace(/\[/g, '').replace(/\]/g, '');
+        auditTagEl.innerHTML = '<sup>' + escapeHtml(cleanTag) + '</sup>';
+        auditTagEl.className = 'sticky-tag';
+        if (rec.category === 'Nerve') auditTagEl.classList.add('tag-nerve');
+        else if (rec.category === 'Muscle') auditTagEl.classList.add('tag-muscle');
+        else auditTagEl.classList.add('tag-bone');
+
+        auditQuestionEl.textContent = rec.question || 'Clinical evaluation scenario';
+        auditAnswerEl.textContent = rec.student_answer || '(No answer provided)';
+
+        if (auditFeedbackEl) {
+            auditFeedbackEl.textContent = rec.companion_feedback || '';
+            auditFeedbackEl.className = 'audit-card-feedback ' + (rec.is_correct ? 'feedback-confirmed' : 'needs-reinforce');
+        }
+
+        if (auditTakeawayEl) {
+            auditTakeawayEl.textContent = rec.key_takeaway || '';
+        }
+
+        if (auditMetaEl) {
+            var ts = rec.timestamp ? new Date(rec.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+            auditMetaEl.textContent = 'Saved in audit_notes/' + rec.structure_id + '_audit.md ' + (ts ? ('(' + ts + ')') : '');
+        }
+
+        auditCardEl.style.display = 'flex';
+
+        // Select and isolate structure in 3D viewport
+        if (window.NeuroViewport && rec.structure_id) {
+            NeuroViewport.selectStructureById(rec.structure_id);
+        }
+    }
+
+    function openAuditRecordById(structureId) {
+        if (auditNotesMap[structureId]) {
+            openAuditRecord(auditNotesMap[structureId]);
+        }
+    }
+
+    function closeAuditRecord() {
+        if (auditCardEl) auditCardEl.style.display = 'none';
+        currentAuditRecord = null;
+    }
+
+    /* ================================================================
        Hierarchical File-Tree Rendering
        ================================================================ */
     function renderTree() {
@@ -320,6 +473,25 @@
             musculoList.appendChild(skeletalSubfolder);
 
             container.appendChild(musculoFolder);
+
+            // 3. Clinical Audit Notes Folder (persisted in audit_notes/ directory)
+            var auditKeys = Object.keys(auditNotesMap);
+            var auditFolder = createFolderElement('clinical_audit_notes', 'Clinical Audit Notes', auditKeys.length);
+            var auditList = auditFolder.querySelector('.tree-folder-children');
+
+            if (auditKeys.length === 0) {
+                var emptyEl = document.createElement('div');
+                emptyEl.className = 'tree-audit-empty';
+                emptyEl.textContent = 'No audit notes saved yet. Complete a clinical audit to save feedback records here.';
+                auditList.appendChild(emptyEl);
+            } else {
+                auditKeys.forEach(function (sid) {
+                    var record = auditNotesMap[sid];
+                    auditList.appendChild(createAuditNodeElement(record));
+                });
+            }
+            container.appendChild(auditFolder);
+
             treeEl.appendChild(container);
 
             if (currentStructure) {
@@ -355,6 +527,48 @@
         folder.appendChild(header);
         folder.appendChild(children);
         return folder;
+    }
+
+    function createAuditNodeElement(record) {
+        var sid = record.structure_id;
+        var node = document.createElement('div');
+        node.className = 'tree-node tree-node-audit';
+        node.setAttribute('data-id', sid);
+        node.setAttribute('data-audit-id', sid);
+
+        var isConfirmed = record.is_correct;
+        var statusTag = isConfirmed
+            ? '<span class="tag-confirmed"><sup>Confirmed</sup></span>'
+            : '<span class="tag-reinforce"><sup>Reinforce</sup></span>';
+
+        var previewText = record.companion_feedback || record.key_takeaway || '';
+
+        var html =
+            '<div class="tree-node-main">' +
+                '<span class="tree-node-name">' + escapeHtml(record.structure_name || sid) + '</span>' +
+                '<div class="tree-node-meta">' +
+                    statusTag +
+                    '<button type="button" class="tree-audit-delete" title="Delete audit note">×</button>' +
+                '</div>' +
+            '</div>' +
+            '<div class="tree-note-preview">' + escapeHtml(previewText) + '</div>';
+
+        node.innerHTML = html;
+
+        node.addEventListener('click', function (e) {
+            if (e.target.classList.contains('tree-audit-delete')) return;
+            openAuditRecord(record);
+        });
+
+        var delBtn = node.querySelector('.tree-audit-delete');
+        if (delBtn) {
+            delBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                deleteAuditRecord(sid);
+            });
+        }
+
+        return node;
     }
 
     function createNodeElement(structure) {
@@ -447,10 +661,10 @@
        Public API
        ================================================================ */
     window.NeuroNotes = {
-        init:         init,
-        openNote:     openNote,
-        closeNote:    closeNote,
-        saveNote:     function (id, text) {
+        init:                 init,
+        openNote:             openNote,
+        closeNote:            closeNote,
+        saveNote:             function (id, text) {
             if (text && text.trim().length > 0) {
                 notesMap[id] = text.trim();
                 saveToStorage();
@@ -459,13 +673,20 @@
             }
             renderTree();
         },
-        deleteNote:   deleteNote,
-        getNotes:     function () { return Object.assign({}, notesMap); },
-        getNoteCount: function () {
+        deleteNote:           deleteNote,
+        getNotes:             function () { return Object.assign({}, notesMap); },
+        getNoteCount:         function () {
             return Object.keys(notesMap).filter(function (id) {
                 return notesMap[id] && notesMap[id].trim().length > 0;
             }).length;
         },
-        renderTree:   renderTree
+        renderTree:           renderTree,
+        loadAuditNotes:       loadAuditNotes,
+        saveAuditRecord:      saveAuditRecord,
+        deleteAuditRecord:    deleteAuditRecord,
+        openAuditRecord:      openAuditRecord,
+        openAuditRecordById:  openAuditRecordById,
+        closeAuditRecord:     closeAuditRecord,
+        getAuditNotes:        function () { return Object.assign({}, auditNotesMap); }
     };
 })();

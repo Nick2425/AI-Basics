@@ -1166,3 +1166,144 @@ sup {
     background: var(--accent-dim);
     color: var(--text-primary);
 }
+
+/* ==================== Clinical Audit Records & Feedback ==================== */
+#audit-detail-card {
+    position: absolute;
+    width: 380px;
+    max-width: calc(100% - 32px);
+    max-height: calc(100% - 40px);
+    overflow-y: auto;
+    z-index: 26;
+    padding: 16px;
+    animation: fadeIn 0.16s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.audit-badge-pill {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent);
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.audit-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(10, 15, 24, 0.5);
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.audit-card-section {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.audit-card-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+}
+
+.audit-card-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+.audit-card-text.user-text {
+    color: var(--text-primary);
+    font-style: italic;
+}
+
+.audit-card-feedback {
+    font-size: 12px;
+    line-height: 1.45;
+    padding: 8px 10px;
+    border-radius: 5px;
+    background: rgba(52, 211, 153, 0.12);
+    border-left: 3px solid #34d399;
+    color: #a7f3d0;
+}
+
+.audit-card-feedback.needs-reinforce {
+    background: rgba(245, 158, 11, 0.12);
+    border-left: 3px solid #f59e0b;
+    color: #fde68a;
+}
+
+.audit-card-takeaway {
+    font-size: 12px;
+    line-height: 1.45;
+    padding: 8px 10px;
+    border-radius: 5px;
+    background: rgba(56, 189, 248, 0.1);
+    border-left: 3px solid var(--accent);
+    color: var(--text-primary);
+}
+
+.tree-node-audit {
+    border-left: 2px solid var(--accent);
+}
+
+.tree-audit-delete {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 1px 3px;
+    border-radius: 3px;
+    line-height: 1;
+}
+
+.tree-audit-delete:hover {
+    color: #ef4444;
+}
+
+.tag-confirmed {
+    color: #34d399;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.tag-reinforce {
+    color: #f59e0b;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.tree-audit-empty {
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.chat-bubble-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}

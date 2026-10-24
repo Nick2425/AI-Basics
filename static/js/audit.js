@@ -337,35 +337,53 @@
     function handleWhatIfResponse(resData) {
         var isCorrect = resData.is_correct;
         var feedbackText = resData.clinical_feedback;
+        var structureId = resData.structure_id || (currentGapData ? currentGapData.target_structure_id : '');
 
         if (feedbackEl) {
             feedbackEl.className = 'whatif-feedback ' + (isCorrect ? 'feedback-correct' : 'feedback-partial');
-            feedbackEl.textContent = feedbackText + ' Takeaway saved to study notes.';
+            feedbackEl.textContent = feedbackText + ' Takeaway and companion feedback saved to audit_notes folder.';
             feedbackEl.style.display = 'block';
         }
 
-        // Professional confirmation in conversational chat stream
-        var chatHtml =
-            (isCorrect ? '<strong>Assessment confirmed.</strong> ' : '<strong>Clinical correlation:</strong> ') +
-            escapeHtml(feedbackText) +
-            '<br><br><em>Appended verified takeaway to study notes for ' + escapeHtml(resData.structure_name) + '.</em>';
+        // 1. Save full audit record to separate folder in NeuroNotes
+        if (window.NeuroNotes && resData.audit_record) {
+            NeuroNotes.saveAuditRecord(resData.audit_record);
+        }
 
-        logToChat('tutor', chatHtml, isCorrect ? 'feedback-correct' : 'feedback-partial');
-
-        // Append clinical takeaway to the structure's note in NeuroNotes
-        if (window.NeuroNotes && currentGapData) {
-            var targetId = currentGapData.target_structure_id;
+        // 2. Append clinical takeaway to the structure's regular study note in NeuroNotes
+        if (window.NeuroNotes && structureId) {
             var currentNotes = NeuroNotes.getNotes();
-            var existingNote = currentNotes[targetId] || '';
+            var existingNote = currentNotes[structureId] || '';
             var updated = existingNote
                 ? (existingNote + resData.append_text)
                 : ('Clinical Study Note: ' + resData.key_takeaway);
 
-            NeuroNotes.saveNote(targetId, updated);
+            NeuroNotes.saveNote(structureId, updated);
         }
 
+        // 3. Companion confirmation in conversational chat stream
+        var chatHtml =
+            (isCorrect ? '<strong>Assessment confirmed.</strong> ' : '<strong>Clinical correlation:</strong> ') +
+            escapeHtml(feedbackText) +
+            '<br><br><em>Full companion feedback and takeaway saved to the <strong>Clinical Audit Notes</strong> folder (audit_notes/' + escapeHtml(structureId) + '_audit.md).</em>';
+
+        // Quick action button to inspect the audit note
+        var actions = [
+            {
+                label: 'View Audit Note',
+                className: 'btn-secondary btn-xs',
+                onClick: function () {
+                    if (window.NeuroNotes) {
+                        NeuroNotes.openAuditRecordById(structureId);
+                    }
+                }
+            }
+        ];
+
+        logToChat('tutor', chatHtml, isCorrect ? 'feedback-correct' : 'feedback-partial', actions);
+
         if (submitBtn) {
-            submitBtn.textContent = 'Takeaway Saved';
+            submitBtn.textContent = 'Takeaway & Audit Saved';
         }
 
         // Auto-close modal after brief review and recenter camera

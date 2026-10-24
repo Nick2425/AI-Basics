@@ -31,7 +31,7 @@ with open(_data_path, "r", encoding="utf-8") as _f:
     _anatomy_data = json.load(_f)
 
 from engine.auditor import audit_notes
-from engine.what_if import evaluate_what_if
+from engine.what_if import evaluate_what_if, get_all_audit_notes, delete_audit_note
 
 # ---------------------------------------------------------------------------
 # API Routes (must be registered before the static file catch-all)
@@ -66,6 +66,20 @@ async def run_what_if(request: Request):
     answer = body.get("answer", "")
     result = evaluate_what_if(structure_id, question, answer)
     return JSONResponse(content=result)
+
+
+@app.get("/api/audit-notes")
+async def list_audit_notes():
+    """Return all saved audit notes from the audit_notes/ folder."""
+    notes = get_all_audit_notes()
+    return JSONResponse(content={"audit_notes": notes})
+
+
+@app.delete("/api/audit-notes/{structure_id}")
+async def remove_audit_note(structure_id: str):
+    """Delete a saved audit note by structure ID."""
+    deleted = delete_audit_note(structure_id)
+    return JSONResponse(content={"deleted": deleted, "structure_id": structure_id})
 
 # ---------------------------------------------------------------------------
 # Static file serving (catch-all — must be last)
