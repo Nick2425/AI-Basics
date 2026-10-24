@@ -159,7 +159,11 @@
 
         var avatarEl = document.createElement('div');
         avatarEl.className = 'chat-avatar';
-        avatarEl.textContent = (sender === 'user' ? 'You' : 'Tutor');
+        if (sender === 'user') {
+            avatarEl.textContent = 'You';
+        } else {
+            avatarEl.innerHTML = '<img src="/images/professor_snoop_avatar.png" alt="Professor Snoop" class="chat-avatar-icon"> Professor Snoop';
+        }
         msgEl.appendChild(avatarEl);
 
         var bubbleEl = document.createElement('div');
@@ -274,6 +278,14 @@
         questionEl.textContent   = data.what_if_prompt;
         answerEl.value           = '';
 
+        // Initialize Snoopy Mascot in Pointing/Inquisitive State
+        var snoopyImg = document.getElementById('snoopy-mascot-img');
+        var snoopyGuide = document.getElementById('snoopy-audit-guide');
+        var snoopySpeech = document.getElementById('snoopy-speech');
+        if (snoopyImg) snoopyImg.src = '/images/snoopy_pointing.png';
+        if (snoopyGuide) snoopyGuide.className = 'snoopy-audit-guide state-asking';
+        if (snoopySpeech) snoopySpeech.innerHTML = 'Examine this anatomical blind spot! What functional deficit occurs?';
+
         if (feedbackEl) {
             feedbackEl.style.display = 'none';
             feedbackEl.textContent   = '';
@@ -345,6 +357,18 @@
             feedbackEl.style.display = 'block';
         }
 
+        // Transition Snoopy Mascot to Celebratory/Proud State
+        var snoopyImg = document.getElementById('snoopy-mascot-img');
+        var snoopyGuide = document.getElementById('snoopy-audit-guide');
+        var snoopySpeech = document.getElementById('snoopy-speech');
+        if (snoopyImg) snoopyImg.src = '/images/snoopy_happy.png';
+        if (snoopyGuide) snoopyGuide.className = 'snoopy-audit-guide state-answered';
+        if (snoopySpeech) {
+            snoopySpeech.innerHTML = isCorrect
+                ? '<strong>Brilliant clinical reasoning!</strong> Diagnostic assessment verified.'
+                : '<strong>Good clinical analysis!</strong> Takeaway recorded in your audit notes.';
+        }
+
         // 1. Save full audit record to separate folder in NeuroNotes
         if (window.NeuroNotes && resData.audit_record) {
             NeuroNotes.saveAuditRecord(resData.audit_record);
@@ -386,10 +410,10 @@
             submitBtn.textContent = 'Takeaway & Audit Saved';
         }
 
-        // Auto-close modal after brief review and recenter camera
+        // Auto-close modal after review with Snoopy celebration and recenter camera
         setTimeout(function () {
             closeModal();
-        }, 1800);
+        }, 2500);
     }
 
     function escapeHtml(str) {

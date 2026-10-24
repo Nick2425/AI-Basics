@@ -94,4 +94,6 @@ Activity mode: live app and editor with interactive mechanical verification.
 - Updated ViewCube face labels and terminal view commands to anatomical directional terminology (Anterior, Posterior, Superior, Inferior, Left, Right).
 - Blended command console with conversational AI assistant: students can query anatomical structures, clinical deficits, and study progress in natural language or execute clinical commands (`audit`, `view`, `theme`, `recenter`, `inspect`, `clear`, `help`).
 - Integrated 3D viewport actions into conversational AI responses: automatically isolating discussed anatomy and providing interactive quick-action buttons directly within chat bubbles.
+- Personalized application identity: renamed application to SnoopAnatomy and AI companion to Professor Snoop.
+- Added animated Professor Snoop mascot figure to the clinical audit challenge modal, pointing directly to audit scenario boxes during questions and changing to a proud, celebrating expression upon assessment submission.
 

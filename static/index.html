@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NeuroSoma - Interactive anatomy study companion with 3D viewport and knowledge gap detection for biomedical coursework">
-    <title>NeuroSoma - Anatomy Study Navigator</title>
+    <meta name="description" content="SnoopAnatomy - Interactive anatomy study companion with 3D viewport and knowledge gap detection for biomedical coursework">
+    <title>SnoopAnatomy - Anatomy Study Navigator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
         <!-- ==================== Header & Menu Bar ==================== -->
         <header id="header">
             <div class="header-left">
-                <h1 class="app-title">NeuroSoma</h1>
+                <h1 class="app-title">SnoopAnatomy</h1>
                 <nav class="menu-bar" aria-label="Application menu">
                     <div class="menu-item" id="menu-view">
                         <button class="menu-button" aria-haspopup="true" aria-expanded="false">View</button>
@@ -124,7 +124,7 @@
             <aside id="right-panel" class="panel">
                 <div class="panel-header panel-header-with-badge">
                     <div class="chat-header-group">
-                        <span class="panel-title">Study Companion</span>
+                        <span class="panel-title">Professor Snoop</span>
                         <span class="chat-status-dot" title="Active"></span>
                     </div>
                     <button type="button" id="terminal-audit-btn" class="btn-primary btn-sm">Audit Notes</button>
@@ -132,13 +132,13 @@
                 <div class="panel-content" id="terminal-container">
                     <div id="terminal-log" class="chat-log" role="log" aria-live="polite">
                         <div class="chat-msg tutor">
-                            <div class="chat-avatar">Tutor</div>
+                            <div class="chat-avatar"><img src="/images/professor_snoop_avatar.png" alt="Professor Snoop" class="chat-avatar-icon"> Professor Snoop</div>
                             <div class="chat-bubble">
-                                NeuroSoma clinical study companion online. Anatomical knowledge graph loaded: 11 cranial and cervical structures.
+                                Professor Snoop online! Welcome to SnoopAnatomy. Anatomical knowledge graph loaded: 11 cranial and cervical structures.
                             </div>
                         </div>
                         <div class="chat-msg tutor">
-                            <div class="chat-avatar">Tutor</div>
+                            <div class="chat-avatar"><img src="/images/professor_snoop_avatar.png" alt="Professor Snoop" class="chat-avatar-icon"> Professor Snoop</div>
                             <div class="chat-bubble">
                                 Ask any anatomical or clinical question, or issue commands (such as <code>audit</code>, <code>view anterior</code>, or <code>theme</code>).
                             </div>
@@ -173,6 +173,17 @@
                     <button type="button" id="whatif-close-btn" class="modal-close" aria-label="Close">×</button>
                 </div>
                 <div class="modal-body">
+                    <!-- Professor Snoop Mascot Guide -->
+                    <div id="snoopy-audit-guide" class="snoopy-audit-guide state-asking">
+                        <div class="snoopy-figure-wrap">
+                            <img id="snoopy-mascot-img" class="snoopy-mascot-img" src="/images/snoopy_pointing.png" alt="Professor Snoop">
+                        </div>
+                        <div class="snoopy-callout">
+                            <span class="snoopy-badge">Professor Snoop</span>
+                            <p id="snoopy-speech" class="snoopy-speech">Examine this anatomical blind spot! What functional deficit occurs?</p>
+                        </div>
+                    </div>
+
                     <div class="gap-alert-box">
                         <span class="gap-label">Detected Knowledge Gap:</span>
                         <p id="whatif-gap-desc" class="gap-desc"></p>

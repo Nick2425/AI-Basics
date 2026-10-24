@@ -283,8 +283,8 @@
 
     function printHelp(log) {
         log(
-            'NeuroSoma Clinical Console &amp; AI Assistant:<br>' +
-            '• <strong>Conversational Assistant:</strong> Inquire naturally about any structure, function, or clinical deficit (e.g., <em>"What does the phrenic nerve do?"</em> or <em>"Why does CN XI injury cause shoulder drop?"</em> or <em>"How are my notes looking?"</em>)<br>' +
+            'SnoopAnatomy Clinical Console &amp; Professor Snoop AI:<br>' +
+            '• <strong>Professor Snoop AI:</strong> Inquire naturally about any structure, function, or clinical deficit (e.g., <em>"What does the phrenic nerve do?"</em> or <em>"Why does CN XI injury cause shoulder drop?"</em> or <em>"How are my notes looking?"</em>)<br>' +
             '• <code>audit</code> - Initiate knowledge-gap audit across your study notes<br>' +
             '• <code>theme &lt;dark|light|pink&gt;</code> - Switch clinical visual theme<br>' +
             '• <code>layer &lt;nervous|musculo&gt; (on/off)</code> - Toggle anatomical systems<br>' +

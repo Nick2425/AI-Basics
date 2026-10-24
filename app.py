@@ -1,4 +1,4 @@
-"""NeuroSoma - FastAPI application server.
+"""SnoopAnatomy - FastAPI application server.
 
 Serves the anatomical knowledge graph API and mounts the static frontend.
 Run with: python app.py
@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 import json
 import os
 
-app = FastAPI(title="NeuroSoma", version="0.1.0")
+app = FastAPI(title="SnoopAnatomy", version="0.1.0")
 
 
 @app.middleware("http")
@@ -106,5 +106,5 @@ app.mount("/", StaticFiles(directory=_static_dir, html=True), name="static")
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
-    print("Starting NeuroSoma on http://localhost:8000")
+    print("Starting SnoopAnatomy on http://localhost:8000")
     uvicorn.run(app, host="0.0.0.0", port=8000)

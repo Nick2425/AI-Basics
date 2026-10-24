@@ -80,11 +80,11 @@ def respond_to_query(query: str, current_notes: dict = None, active_structure_id
         }
 
     # 5. Check for greetings or companion identity inquiries
-    if re.search(r"\b(hello|hi|hey|greetings|who are you|what can you do|help me)\b", q_lower) and len(q_lower.split()) <= 6:
+    if re.search(r"\b(hello|hi|hey|greetings|who are you|what can you do|help me|snoop|professor snoop)\b", q_lower) and len(q_lower.split()) <= 6:
         note_count = len([k for k, v in notes.items() if v and v.strip()])
         return {
             "response_html": (
-                "I am your <strong>NeuroSoma Clinical Study Companion</strong>. "
+                "I am <strong>Professor Snoop</strong>, your Clinical Study Companion for SnoopAnatomy. "
                 "I blend conversational anatomy guidance with direct 3D viewport control.<br><br>"
                 "You can converse with me naturally or issue clinical commands:<br>"
                 "• Ask clinical questions: <em>'What does the phrenic nerve innervate?'</em> or <em>'Why is CN XI vulnerable in biopsies?'</em><br>"
