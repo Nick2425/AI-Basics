@@ -19,7 +19,7 @@ Build mode: learn
   Learner check: Open `http://localhost:8000` in your browser, drag around the viewport, and tell me if the anatomical model and dark clinical layout look like what you pictured.
   Commit: `Scaffold project with 3D anatomical viewport and dark clinical layout`
 
-- [ ] **2. ViewCube synchronization and layer toggles**
+- [x] **2. ViewCube synchronization and layer toggles**
   Becomes usable: An Autodesk Inventor-style ViewCube appears in the top-right of the viewport, rotating in 1:1 sync with the anatomical camera. Clicking cube faces snaps to orthogonal views. The View menu toggles nervous and musculoskeletal layer visibility.
   Why now: Navigation and layer control are needed before inspection and auditing — you need to be able to orient and isolate systems to meaningfully select structures.
   PRD ref: `prd.md > Features > 1. Viewport, ViewCube & Transparency Isolation`
