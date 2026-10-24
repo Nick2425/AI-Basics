@@ -436,7 +436,7 @@
        ================================================================ */
     var TOTAL_TREATS = 11;
     var TREAT_STORAGE_KEY = 'snoopanatomy_treats_v1';
-    var treatCount = 0;
+    var treatCount = 10;
     var treatTrackEl, treatCountEl, treatSnoopAvatarEl, treatChompBubbleEl;
 
     function initTreatBar() {
@@ -447,9 +447,10 @@
 
         var saved = localStorage.getItem(TREAT_STORAGE_KEY);
         if (saved !== null) {
-            treatCount = parseInt(saved, 10) || 0;
+            treatCount = parseInt(saved, 10);
+            if (isNaN(treatCount) || treatCount < 10) treatCount = 10;
         } else {
-            treatCount = 0;
+            treatCount = 10;
         }
         if (treatCount > TOTAL_TREATS) treatCount = TOTAL_TREATS;
 
