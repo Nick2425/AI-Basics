@@ -39,7 +39,7 @@ Build mode: learn
   Learner check: Click a structure, write a short study note, and close it. Check the left tree. Reload the page. Does it all feel natural?
   Commit: `Add click-to-inspect, transparency isolation, and sticky notes`
 
-- [ ] **4. Knowledge-gap audit with camera glide and clinical what-if challenge**
+- [x] **4. Knowledge-gap audit with camera glide and clinical what-if challenge**
   Becomes usable: After writing notes, the terminal prompts "Ready to audit your notes?" Accepting sends notes to the Python audit engine, which finds an unaddressed structure. The camera smoothly glides to that structure, surrounding anatomy dims, and a "What-If" clinical modal appears. Answering appends the takeaway to your notes. This is the unique kernel working end to end.
   Why now: This is the core of the app — the thing that makes NeuroSoma different from a plain anatomy viewer. It must land early to prove the kernel and leave time for polish.
   PRD ref: `prd.md > Features > 3. Proactive Knowledge Gap Audit`, `prd.md > Features > 4. "What-If" Clinical Scenario Challenge`

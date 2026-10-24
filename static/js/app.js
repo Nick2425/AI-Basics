@@ -29,6 +29,13 @@
         }
 
         /* ==============================================================
+           Initialize Clinical Audit Engine & Terminal
+           ============================================================== */
+        if (window.NeuroAudit) {
+            NeuroAudit.init();
+        }
+
+        /* ==============================================================
            Layer visibility toggles (View > Layers)
            ============================================================== */
         var layerNervous = document.getElementById('layer-nervous');
