@@ -62,23 +62,32 @@ Build mode: learn
 ## Hands-on Checkpoints
 
 - [x] Early usable behavior explored — after slice 3 (inspect, notes, and transparency working), the annotation loop is complete and ready for feedback before building the audit kernel
-- [ ] Final kick-the-tires exploration and feedback completed
+- [x] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
 
-- [ ] Final review complete — feedback resolved and learner confirms ready to ship
+- [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence: [what actually happened; real document/test/code references; unfinished work if interrupted]
-Route and stops: [actual paths and symbols; guided stops completed, or reference-only route]
-Edit outcome: [tried/kept/reverted/declined/not applicable; verification if changed]
-Reflection: [offered/answered/declined/already covered — personal answer belongs only in the ignored profile]
-Activity mode: [live app and editor, explicit static fallback, focused alternative, prior practice, or recap]
+Activity and evidence: Implemented dedicated clinical audit notes persistence to disk (audit_notes/ directory) as structured JSON and Markdown files with companion feedback; wired REST endpoints GET /api/audit-notes and DELETE /api/audit-notes/{structure_id}; created dedicated 'Clinical Audit Notes' folder in left hierarchy tree; built interactive floating detail card with companion feedback, scenario question, user assessment, and verified takeaway. Mechanically verified via curl/python HTTP requests and live server at http://localhost:8000.
+Route and stops:
+  - Stop 1: static/js/audit.js (triggerAudit) -> engine/auditor.py (audit_notes)
+  - Stop 2: static/js/viewport.js (glideToTarget, selectStructureById)
+  - Stop 3: engine/what_if.py (evaluate_what_if, save_audit_record) -> audit_notes/<id>_audit.md -> static/js/notes.js (openAuditRecord)
+Edit outcome: Kept and verified — dual persistence between localStorage study drafts and server audit_notes/ disk records with companion feedback.
+Reflection: Dual-layer state partitioning: separating volatile exploratory drafts (localStorage) from verified clinical audit records (disk-persisted JSON/Markdown) provides seamless resilience, portability, and clear feedback history.
+Activity mode: live app and editor with interactive mechanical verification.
 
 ## Revisions
+
+- Save clinical audit notes in separate folder (audit_notes/) with both JSON and Markdown representations.
+- Provide comprehensive companion evaluation feedback in chat bubble and within the audited note record card.
+- Group saved audit notes in a dedicated 'Clinical Audit Notes' folder in the left sidebar hierarchy tree.
+- Replaced all brackets [] with superscript <sup> tags or clean badge pills.
+- Added quick action 'View Audit Note' button in companion chat stream.
 
