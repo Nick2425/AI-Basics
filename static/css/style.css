@@ -192,12 +192,26 @@ body {
 }
 
 .app-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: var(--font-heading);
     font-size: 16px;
     font-weight: 700;
     color: var(--accent);
     letter-spacing: 0.5px;
     user-select: none;
+}
+
+.app-title-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #ffffff;
+    border: 1.5px solid var(--accent);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
 }
 
 /* ==================== Menu Bar ==================== */
