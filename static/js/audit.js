@@ -553,6 +553,9 @@
             if (treatChompBubbleEl) {
                 var chompQuotes = ['Yum!', 'Crunch!', 'Delicious!', 'Good boy!', 'Tasty!'];
                 var randomQuote = chompQuotes[Math.floor(Math.random() * chompQuotes.length)];
+                if (treatCount >= TOTAL_TREATS) {
+                    randomQuote = 'All 11 Treats Earned!';
+                }
                 treatChompBubbleEl.textContent = randomQuote;
                 treatChompBubbleEl.classList.remove('visible');
                 void treatChompBubbleEl.offsetWidth;
@@ -560,9 +563,120 @@
 
                 setTimeout(function () {
                     treatChompBubbleEl.classList.remove('visible');
-                }, 1300);
+                }, 1800);
+            }
+
+            // Confetti explosion when treats reach 11
+            if (treatCount >= TOTAL_TREATS) {
+                setTimeout(function () {
+                    launchConfettiExplosion();
+                }, 200);
             }
         }, 850);
+    }
+
+    /* ================================================================
+       Confetti Explosion System
+       ================================================================ */
+    var confettiAnimationId = null;
+
+    function launchConfettiExplosion() {
+        var canvas = document.getElementById('confetti-canvas');
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.id = 'confetti-canvas';
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100vw';
+            canvas.style.height = '100vh';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.zIndex = '10000';
+            document.body.appendChild(canvas);
+        }
+
+        var ctx = canvas.getContext('2d');
+        var width = (canvas.width = window.innerWidth);
+        var height = (canvas.height = window.innerHeight);
+
+        var colors = ['#f59e0b', '#38bdf8', '#34d399', '#ec4899', '#a855f7', '#fbbf24', '#ffffff', '#f43f5e', '#6366f1'];
+        var particles = [];
+        var numParticles = 180;
+        var originX = width / 2;
+        var originY = 48;
+
+        for (var i = 0; i < numParticles; i++) {
+            var spreadVx = (Math.random() - 0.5) * 22;
+            var spreadVy = Math.random() * 8 + 3;
+
+            particles.push({
+                x: originX + (Math.random() - 0.5) * 140,
+                y: originY,
+                vx: spreadVx,
+                vy: spreadVy,
+                size: 6 + Math.random() * 8,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 12,
+                wobble: Math.random() * 10,
+                wobbleSpeed: 0.08 + Math.random() * 0.08,
+                opacity: 1,
+                decay: 0.003 + Math.random() * 0.004,
+                shape: Math.random() > 0.3 ? 'rect' : 'circle'
+            });
+        }
+
+        if (confettiAnimationId) {
+            cancelAnimationFrame(confettiAnimationId);
+        }
+
+        var startTime = Date.now();
+
+        function render() {
+            var elapsed = Date.now() - startTime;
+            ctx.clearRect(0, 0, width, height);
+
+            var active = 0;
+            for (var p = 0; p < particles.length; p++) {
+                var pt = particles[p];
+                if (pt.opacity <= 0.01 || pt.y > height + 20) continue;
+                active++;
+
+                pt.x += pt.vx;
+                pt.y += pt.vy;
+                pt.vy += 0.28; // Gravity
+                pt.vx *= 0.985; // Air friction
+                pt.wobble += pt.wobbleSpeed;
+                pt.rotation += pt.rotationSpeed;
+                pt.opacity -= pt.decay;
+
+                var currentX = pt.x + Math.sin(pt.wobble) * 2.5;
+
+                ctx.save();
+                ctx.translate(currentX, pt.y);
+                ctx.rotate((pt.rotation * Math.PI) / 180);
+                ctx.globalAlpha = Math.max(0, pt.opacity);
+                ctx.fillStyle = pt.color;
+
+                if (pt.shape === 'rect') {
+                    ctx.fillRect(-pt.size / 2, -pt.size / 3, pt.size, pt.size * 0.65);
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, pt.size * 0.45, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            if (active > 0 && elapsed < 4500) {
+                confettiAnimationId = requestAnimationFrame(render);
+            } else {
+                ctx.clearRect(0, 0, width, height);
+                confettiAnimationId = null;
+            }
+        }
+
+        render();
     }
 
     /* ================================================================
@@ -575,6 +689,7 @@
         hideProactivePrompt:  hideProactiveBanner,
         logToTerminal:        logToTerminal,
         logToChat:            logToChat,
-        feedTreat:            feedProfessorSnoopTreat
+        feedTreat:            feedProfessorSnoopTreat,
+        launchConfetti:       launchConfettiExplosion
     };
 })();
