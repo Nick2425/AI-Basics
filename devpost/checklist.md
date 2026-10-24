@@ -91,4 +91,5 @@ Activity mode: live app and editor with interactive mechanical verification.
 - Replaced all brackets [] with superscript <sup> tags or clean badge pills.
 - Added quick action 'View Audit Note' button in companion chat stream.
 - Lightened companion terminal in Clean Light mode with crisp slate background, clean white chat bubbles, and improved text contrast.
+- Updated ViewCube face labels and terminal view commands to anatomical directional terminology (Anterior, Posterior, Superior, Inferior, Left, Right).
 
