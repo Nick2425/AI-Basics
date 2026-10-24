@@ -223,7 +223,7 @@
             'Available clinical commands:<br>' +
             '• <code>audit</code> - Initiate knowledge-gap audit across your study notes<br>' +
             '• <code>theme &lt;dark|light|pink&gt;</code> - Switch clinical visual theme<br>' +
-            '• <code>layer &lt;nervous|musculo&gt; [on|off]</code> - Toggle anatomical systems<br>' +
+            '• <code>layer &lt;nervous|musculo&gt; (on/off)</code> - Toggle anatomical systems<br>' +
             '• <code>inspect &lt;name&gt;</code> - Zoom to and isolate structure in 3D<br>' +
             '• <code>view &lt;front|back|left|right|top|bottom&gt;</code> - Snap camera orthogonally<br>' +
             '• <code>recenter</code> - Reset camera to overview perspective (shortcut: R)<br>' +
