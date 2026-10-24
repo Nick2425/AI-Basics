@@ -75,12 +75,75 @@
                 break;
 
             default:
-                // If it looks like a structure query, try to inspect it
-                if (!handleInspectFuzzy(clean, log)) {
-                    log('Unrecognized command: <code>' + escapeHtml(cmd) + '</code>. Type <code>help</code> for clinical command syntax.');
-                }
+                // Blend: handle conversational inquiries with the clinical AI assistant
+                handleConversationalQuery(clean, log);
                 break;
         }
+    }
+
+    function handleConversationalQuery(text, log) {
+        var notes = window.NeuroNotes ? NeuroNotes.getNotes() : {};
+        var selectedId = window.NeuroViewport ? NeuroViewport.getSelectedStructureId() : '';
+
+        fetch('/api/assistant', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: text,
+                notes: notes,
+                selected_structure_id: selectedId
+            })
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (!data) return;
+
+            // Optional 3D structure focus
+            if (data.focus_structure_id && window.NeuroViewport) {
+                NeuroViewport.selectStructureById(data.focus_structure_id);
+            }
+
+            // Optional command execution (e.g. audit, recenter, theme, view, inspect)
+            if (data.command) {
+                if (data.command === 'audit' && window.NeuroAudit) {
+                    setTimeout(function () { window.NeuroAudit.triggerAudit(); }, 350);
+                } else if (data.command === 'recenter' && window.NeuroViewport) {
+                    NeuroViewport.resetCamera(650);
+                } else if (data.command === 'theme') {
+                    handleThemeCommand(data.command_arg || '', function () {});
+                } else if (data.command === 'view') {
+                    handleViewCommand(data.command_arg || '', function () {});
+                } else if (data.command === 'inspect' && data.command_arg && window.NeuroViewport) {
+                    NeuroViewport.selectStructureById(data.command_arg);
+                }
+            }
+
+            // Wire interactive quick-action buttons
+            var actions = null;
+            if (data.actions && Array.isArray(data.actions)) {
+                actions = data.actions.map(function (act) {
+                    return {
+                        label: act.label,
+                        className: 'btn-secondary btn-xs',
+                        onClick: function () {
+                            execute(act.action);
+                        }
+                    };
+                });
+            }
+
+            if (window.NeuroAudit && window.NeuroAudit.logToChat) {
+                window.NeuroAudit.logToChat('tutor', data.response_html || '', '', actions);
+            } else {
+                log(data.response_html || '');
+            }
+        })
+        .catch(function (err) {
+            console.error('[NeuroTerminal] Assistant query error:', err);
+            if (!handleInspectFuzzy(text, log)) {
+                log('I can answer anatomy and clinical questions, or execute commands. Type <code>help</code> for clinical command syntax.');
+            }
+        });
     }
 
     function handleThemeCommand(arg, log) {
@@ -220,7 +283,8 @@
 
     function printHelp(log) {
         log(
-            'Available clinical commands:<br>' +
+            'NeuroSoma Clinical Console &amp; AI Assistant:<br>' +
+            '• <strong>Conversational Assistant:</strong> Inquire naturally about any structure, function, or clinical deficit (e.g., <em>"What does the phrenic nerve do?"</em> or <em>"Why does CN XI injury cause shoulder drop?"</em> or <em>"How are my notes looking?"</em>)<br>' +
             '• <code>audit</code> - Initiate knowledge-gap audit across your study notes<br>' +
             '• <code>theme &lt;dark|light|pink&gt;</code> - Switch clinical visual theme<br>' +
             '• <code>layer &lt;nervous|musculo&gt; (on/off)</code> - Toggle anatomical systems<br>' +

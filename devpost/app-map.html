@@ -304,22 +304,23 @@
                     <line x1="240" y1="170" x2="300" y2="130" stroke="#64748b" stroke-width="2"/>
 
                     <!-- Server Box -->
-                    <rect x="300" y="60" width="200" height="120" rx="6" fill="url(#boxGrad)" stroke="#34d399" stroke-width="1.5"/>
-                    <text x="400" y="90" fill="#f1f5f9" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">FastAPI Backend Server</text>
-                    <text x="400" y="112" fill="#34d399" font-family="monospace" font-size="10.5" text-anchor="middle">POST /api/audit</text>
-                    <text x="400" y="128" fill="#34d399" font-family="monospace" font-size="10.5" text-anchor="middle">POST /api/what-if</text>
-                    <text x="400" y="144" fill="#34d399" font-family="monospace" font-size="10.5" text-anchor="middle">GET /api/audit-notes</text>
-                    <text x="400" y="162" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="middle">app.py</text>
+                    <rect x="300" y="50" width="200" height="140" rx="6" fill="url(#boxGrad)" stroke="#34d399" stroke-width="1.5"/>
+                    <text x="400" y="75" fill="#f1f5f9" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle">FastAPI Backend Server</text>
+                    <text x="400" y="95" fill="#34d399" font-family="monospace" font-size="10.5" text-anchor="middle">POST /api/assistant</text>
+                    <text x="400" y="111" fill="#34d399" font-family="monospace" font-size="10.5" text-anchor="middle">POST /api/audit</text>
+                    <text x="400" y="127" fill="#34d399" font-family="monospace" font-size="10.5" text-anchor="middle">POST /api/what-if</text>
+                    <text x="400" y="143" fill="#34d399" font-family="monospace" font-size="10.5" text-anchor="middle">GET /api/audit-notes</text>
+                    <text x="400" y="165" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="middle">app.py</text>
 
                     <!-- Arrow to Engines & Storage -->
-                    <line x1="500" y1="100" x2="560" y2="70" stroke="#64748b" stroke-width="2"/>
+                    <line x1="500" y1="95" x2="560" y2="70" stroke="#64748b" stroke-width="2"/>
                     <line x1="500" y1="140" x2="560" y2="170" stroke="#64748b" stroke-width="2"/>
 
                     <!-- Engine & Storage Boxes -->
                     <rect x="560" y="30" width="220" height="80" rx="6" fill="url(#boxGrad)" stroke="#f59e0b" stroke-width="1.5"/>
-                    <text x="670" y="60" fill="#f1f5f9" font-family="sans-serif" font-size="13" font-weight="bold" text-anchor="middle">Audit &amp; Scenario Engines</text>
-                    <text x="670" y="80" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Semantic Coverage &bull; Multi-Question</text>
-                    <text x="670" y="96" fill="#f59e0b" font-family="monospace" font-size="10" text-anchor="middle">engine/auditor.py &amp; what_if.py</text>
+                    <text x="670" y="55" fill="#f1f5f9" font-family="sans-serif" font-size="13" font-weight="bold" text-anchor="middle">AI Assistant &amp; Audit</text>
+                    <text x="670" y="74" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Conversational Q&amp;A &bull; Scenarios</text>
+                    <text x="670" y="93" fill="#f59e0b" font-family="monospace" font-size="9.5" text-anchor="middle">engine/assistant.py &amp; auditor.py</text>
 
                     <rect x="560" y="130" width="220" height="80" rx="6" fill="url(#boxGrad)" stroke="#a855f7" stroke-width="1.5"/>
                     <text x="670" y="160" fill="#f1f5f9" font-family="sans-serif" font-size="13" font-weight="bold" text-anchor="middle">Audit Persistence Folder</text>
@@ -387,10 +388,10 @@
                 </div>
 
                 <div class="pointer-card">
-                    <h4>Terminal Commands &amp; Palettes</h4>
-                    <p>Register new terminal commands or customize the Surgical Dark, Light, or Pink palettes:</p>
-                    <code>static/js/terminal.js</code> (COMMANDS)<br>
-                    <code>static/css/style.css</code> (:root theme variables)
+                    <h4>Console &amp; Conversational AI</h4>
+                    <p>Commands, intent matching, anatomical knowledge lookup, and theme palettes:</p>
+                    <code>engine/assistant.py</code> (respond_to_query)<br>
+                    <code>static/js/terminal.js</code> (handleConversationalQuery)
                 </div>
             </div>
         </section>
@@ -415,7 +416,7 @@
             <p>To run the application locally from the repository root:</p>
             <pre><code>python app.py
 # Server starts on http://localhost:8000
-# Available routes: GET /, GET /api/anatomy, POST /api/audit, POST /api/what-if, GET /api/audit-notes</code></pre>
+# Available routes: GET /, GET /api/anatomy, POST /api/assistant, POST /api/audit, POST /api/what-if, GET /api/audit-notes</code></pre>
 
             <div class="meta-box">
                 <span><strong>Git Snapshot Commit:</strong> <code>3420913</code></span>

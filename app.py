@@ -32,10 +32,24 @@ with open(_data_path, "r", encoding="utf-8") as _f:
 
 from engine.auditor import audit_notes
 from engine.what_if import evaluate_what_if, get_all_audit_notes, delete_audit_note
+from engine.assistant import respond_to_query
 
 # ---------------------------------------------------------------------------
 # API Routes (must be registered before the static file catch-all)
 # ---------------------------------------------------------------------------
+
+@app.post("/api/assistant")
+async def assistant_chat(request: Request):
+    """Conversational tutor endpoint: blends command execution and anatomical question answering."""
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    message = body.get("message", "")
+    notes = body.get("notes", {})
+    selected_id = body.get("selected_structure_id", "")
+    result = respond_to_query(message, notes, selected_id)
+    return JSONResponse(content=result)
 
 @app.get("/api/anatomy")
 async def get_anatomy():
